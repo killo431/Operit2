@@ -19,11 +19,11 @@ namespace Operit.Installer
         /// <summary>Shows the exact deletion scope, including data shared by other copies.</summary>
         public string Describe()
         {
-            return "将永久删除以下目录及其全部内容：\n\n" + string.Join("\n", Directories) +
-                "\n\n同时删除 Windows 凭据管理器中的 Operit2: 凭据。\n" +
-                "包含所有本机身份的聊天、设置、插件、工作区、浏览器数据和运行环境。\n" +
-                "安装版与压缩包版共用这些数据，其他副本也会失去这些本机数据。\n" +
-                "不会向其他设备或云端发送删除指令。请先导出需要保留的数据。";
+            return "The following folders and all their contents will be permanently deleted:\n\n" + string.Join("\n", Directories) +
+                "\n\nOperit2: credentials in Windows Credential Manager will also be deleted.\n" +
+                "This includes chats, settings, plugins, workspaces, browser data, and the runtime for every local identity.\n" +
+                "The install version and the portable version share this data, so other copies also lose this local data.\n" +
+                "No delete instruction is sent to other devices or the cloud. Export anything you want to keep first.";
         }
     }
 
@@ -77,7 +77,7 @@ namespace Operit.Installer
             {
                 var config = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(content);
                 if (config == null || !config.TryGetValue("confirmed", out var confirmed) || !(confirmed is bool))
-                    throw new InvalidDataException("启动配置无效，无法确定自定义数据目录。请先修复配置。 ");
+                    throw new InvalidDataException("The startup configuration is invalid, so custom data folders cannot be determined. Repair the configuration first. ");
                 if ((bool)confirmed)
                 {
                     roots.Add(ConfiguredRoot(config, "runtimeRoot"));
@@ -103,13 +103,13 @@ namespace Operit.Installer
             var current = CreatePlan();
             if (plan == null || !current.Directories.SequenceEqual(plan.Directories, StringComparer.OrdinalIgnoreCase)
                 || current.BootstrapContent != plan.BootstrapContent || !Same(current.BootstrapPath, plan.BootstrapPath))
-                throw new InvalidOperationException("数据目录配置已改变，请重新打开清理界面并确认。 ");
+                throw new InvalidOperationException("The data folder configuration changed. Reopen the cleanup screen and confirm again. ");
             ensureStopped();
             foreach (var root in plan.Directories)
             {
                 ValidateRoot(root);
                 if (Directory.Exists(root)) CheckTree(root);
-                else if (File.Exists(root)) throw new IOException("数据目录被文件占用：" + root);
+                else if (File.Exists(root)) throw new IOException("A data folder is occupied by a file: " + root);
             }
         }
 
@@ -129,7 +129,7 @@ namespace Operit.Installer
             try
             {
                 if (processes.Length != 0)
-                    throw new InvalidOperationException("请先退出所有 Operit2 窗口、后台进程及命令行，再继续。 ");
+                    throw new InvalidOperationException("Exit all Operit2 windows, background processes, and command lines before continuing. ");
             }
             finally { foreach (var process in processes) process.Dispose(); }
         }
@@ -138,7 +138,7 @@ namespace Operit.Installer
         private static string ConfiguredRoot(Dictionary<string, object> config, string key)
         {
             if (!config.TryGetValue(key, out var value) || !(value is string path) || string.IsNullOrWhiteSpace(path))
-                throw new InvalidDataException("启动配置缺少有效目录：" + key);
+                throw new InvalidDataException("The startup configuration is missing a valid folder: " + key);
             return Normalize(path);
         }
 
@@ -148,7 +148,7 @@ namespace Operit.Installer
             root = Normalize(root);
             if (Same(root, Path.GetPathRoot(root)) || protectedPaths.Any(path => IsWithin(path, root))
                 || IsWithin(root, Environment.GetFolderPath(Environment.SpecialFolder.Windows)))
-                throw new InvalidOperationException("拒绝清理受保护的目录：" + root);
+                throw new InvalidOperationException("Refusing to clean up a protected folder: " + root);
             EnsureNoLinkedAncestor(root);
         }
 
@@ -159,7 +159,7 @@ namespace Operit.Installer
                 || (path.Length >= 2 && path[1] == ':' && (path.Length < 3 || path[2] != '\\' && path[2] != '/'))
                 || path.StartsWith(@"\\?\", StringComparison.Ordinal) || path.StartsWith(@"\\.\", StringComparison.Ordinal)
                 || (path.StartsWith(@"\", StringComparison.Ordinal) && !path.StartsWith(@"\\", StringComparison.Ordinal)))
-                throw new InvalidDataException("数据目录必须是完整的 Windows 路径：" + path);
+                throw new InvalidDataException("The data folder must be a fully qualified Windows path: " + path);
             var full = Path.GetFullPath(path);
             return string.Equals(full, Path.GetPathRoot(full), StringComparison.OrdinalIgnoreCase)
                 ? full : full.TrimEnd('\\', '/');
@@ -187,7 +187,7 @@ namespace Operit.Installer
                 catch (FileNotFoundException) { continue; }
                 catch (DirectoryNotFoundException) { continue; }
                 if ((attributes & FileAttributes.ReparsePoint) != 0)
-                    throw new IOException("数据路径经过链接，请先处理该链接：" + current);
+                    throw new IOException("The data path passes through a link. Handle the link first: " + current);
             }
         }
 
@@ -252,7 +252,7 @@ namespace Operit.Installer
             {
                 int error = Marshal.GetLastWin32Error();
                 if (error == 1168) return;
-                throw new Win32Exception(error, "无法枚举 Operit2 凭据。");
+                throw new Win32Exception(error, "Cannot enumerate Operit2 credentials.");
             }
             try
             {
@@ -262,7 +262,7 @@ namespace Operit.Installer
                         Marshal.ReadIntPtr(credentials, index * IntPtr.Size), typeof(Credential));
                     if (credential.Type == 1 && credential.TargetName.StartsWith("Operit2:", StringComparison.Ordinal)
                         && !CredDelete(credential.TargetName, credential.Type, 0))
-                        throw new Win32Exception(Marshal.GetLastWin32Error(), "无法删除 Operit2 凭据。");
+                        throw new Win32Exception(Marshal.GetLastWin32Error(), "Cannot delete the Operit2 credential.");
                 }
             }
             finally { CredFree(credentials); }

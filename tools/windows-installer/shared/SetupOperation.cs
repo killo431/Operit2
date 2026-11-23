@@ -18,7 +18,7 @@ namespace Operit.Installer
             {
                 int comparison = packageVersion.CompareTo(currentVersion);
                 if (comparison < 0)
-                    throw new InvalidOperationException("已安装更新版本的 Operit2，请使用更新的安装包。");
+                    throw new InvalidOperationException("A newer version of Operit2 is already installed. Please use the newer installer.");
                 return comparison > 0 ? SetupOperation.Update : SetupOperation.Repair;
             }
             return SetupOperation.Install;

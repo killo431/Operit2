@@ -1,99 +1,132 @@
-Operit2 — Windows 安装排错、卸载与用户数据
+Operit2 - Windows installation troubleshooting, uninstall, and user data
 
-安装失败时先看这里
-  失败页直接显示出了什么问题、错误码，以及接下来该做什么。
-  原始错误、发生步骤和完整排查说明放在“技术详情”中，需要时展开。
-  点击“复制错误信息”可复制完整诊断；详情文字也可直接选中复制。
-  “查看诊断日志”“查看 MSI 日志”可打开本次操作对应的文件。
-  “打开日志目录”可定位诊断文件，关闭安装器后文件仍会保留。
-  安装前及安装过程中也可通过“日志与诊断信息”查看路径。
+Read this first if installation fails
+  The failure page shows what went wrong, the error code, and what to do next.
+  The original error, the failing step, and full troubleshooting notes are in
+  "Technical details"; expand it when needed.
+  Click "Copy error details" to copy the full diagnostics; you can also select
+  and copy the detail text directly.
+  "View diagnostic log" and "View MSI log" open the files for this operation.
+  "Open log folder" locates the diagnostic files, which are kept after the
+  installer closes.
+  Before and during installation you can also see the paths under
+  "Logs and diagnostics".
 
-自动退出已运行的应用
-  点击开始安装、更新、修复或卸载后，安装器会在检查和替换文件前，
-  通过 Windows Restart Manager 自动退出此安装位置的 Operit2，包括隐藏窗口。
-  不按进程名关闭其他目录的副本。开始前请保存进行中的工作。
-  无人值守安装也会执行此步骤。无法关闭时停止操作，并提示从托盘退出或用任务管理器结束。
-  永久删除共用用户数据时，其他目录的 Operit2 副本仍需退出后才能通过安全检查。
+Closing a running app automatically
+  After you start install, update, repair, or uninstall, the installer closes
+  Operit2 at this install location, including hidden windows, through Windows
+  Restart Manager before checking and replacing files.
+  It does not close copies in other folders by process name. Save your work first.
+  Unattended installations perform this step too. If the app cannot be closed,
+  the operation stops and asks you to exit from the tray or use Task Manager.
+  When permanently deleting shared user data, copies of Operit2 in other folders
+  must also exit before the safety check passes.
 
-日志在哪里
-  Operit2 安装诊断：%LOCALAPPDATA%\Operit\InstallerLogs\Operit2-setup-日期时间-唯一编号.log
-  按 Win+R，粘贴 %LOCALAPPDATA%\Operit\InstallerLogs，按回车即可打开。
-  每次操作生成独立文件，记录版本、安装包、安装目录、安装步骤和原始错误。
-  Windows Installer 详细日志：系统提供的 MsiLogFileLocation 路径，安装器直接展示。
-  MSI 默认启用详细日志；使用 /L*V 明确指定时，以指定文件为准。
-  诊断目录独立于用户数据目录，便于在卸载或失败后继续查看。
-  日志可能包含用户名和本机路径，向开发者发送前可自行检查。
+Where the logs are
+  Operit2 setup diagnostics: %LOCALAPPDATA%\Operit\InstallerLogs\Operit2-setup-date-time-unique-id.log
+  Press Win+R, paste %LOCALAPPDATA%\Operit\InstallerLogs, and press Enter to open it.
+  Each operation creates its own file recording the version, package, install
+  folder, steps, and original errors.
+  Windows Installer verbose log: the MsiLogFileLocation path the system provides;
+  the installer shows it directly.
+  The MSI enables verbose logging by default; when you pass /L*V explicitly, that file is used.
+  The diagnostics folder is separate from user data folders so you can keep using it
+  after an uninstall or failure.
+  Logs may contain usernames and local paths; review them before sending to the developer.
 
-安装窗口出现前就报错，或需要手动采集完整日志
-  1. 按 Win+R，输入 cmd，按回车。
-  2. 输入以下命令，将安装包路径改为实际下载的 MSI 完整路径，保留两侧引号：
+If the error occurs before the setup window appears, or you need a full log manually
+  1. Press Win+R, type cmd, and press Enter.
+  2. Enter the command below, replacing the package path with the full path to the
+     downloaded MSI and keeping both quotes:
      msiexec.exe /i "D:\Downloads\Operit2.msi" /L*V "%USERPROFILE%\Desktop\Operit2-install.log"
-  3. 完成一次安装尝试后，在桌面找到 Operit2-install.log。
-     桌面已重定向时，请将日志路径改为有写入权限的完整路径。
-  4. 反馈时附上：安装包文件名、Windows 版本、复制的错误详情和两个日志文件。
-     无人值守安装没有自定义窗口，也请使用 /L*V 明确指定日志路径。
+  3. After one installation attempt, find Operit2-install.log on the desktop.
+     If the desktop is redirected, change the log path to a full path you can write to.
+  4. When reporting, include: the installer file name, the Windows version, the copied
+     error details, and both log files.
+     Unattended installations have no custom window, so also specify the log path with /L*V.
 
-2502 / 2503：Windows Installer 安装事务状态异常
-  2502：在没有进行中的安装事务时调用了 InstallFinalize。
-  2503：未标记为正在安装时调用了 RunScript。
-  这些代码不能单独证明是管理员权限不足；更早的错误可能才是真正原因。
-  1. 先保存日志，关闭其他安装任务，重启 Windows 后用当前账户重试。
-  2. 将 MSI 下载到本机文件夹；首次安装使用默认目录。
-  3. 按 Win+R → %TEMP%，尝试新建并删除一个文本文件。
-     不能写入时，请管理员检查当前用户临时目录权限；同时检查系统盘剩余空间。
-  4. 查看 Windows 安全中心保护历史记录或单位安全软件的拦截记录。
-     日志明确指出拒绝访问时，请管理员检查对应路径的权限。
-     不要删除 Windows\Installer，不要给系统目录添加 Everyone 完全控制权限。
-  5. Operit2 默认仅为当前用户安装。需要管理员协助时先提供日志，
-     由管理员确认处理方式，避免换账户后安装到另一个用户目录。
+2502 / 2503: Windows Installer transaction state error
+  2502: InstallFinalize was called without an active install transaction.
+  2503: RunScript was called without being marked as installing.
+  These codes alone do not prove that administrator rights are missing; an earlier
+  error may be the real cause.
+  1. Save the logs first, close other installations, restart Windows, and retry with
+     the current account.
+  2. Download the MSI to a local folder; use the default folder for a first install.
+  3. Press Win+R -> %TEMP% and try creating and deleting a text file.
+     If you cannot write, ask the administrator to check permissions on your temporary
+     folder, and check free space on the system drive.
+  4. Check Windows Security protection history or your organization's security software
+     blocks. When the log clearly shows access denied, ask the administrator to check
+     permissions on that path.
+     Do not delete Windows\Installer, and do not add Everyone full control to system folders.
+  5. Operit2 installs for the current user only by default. If administrator help is
+     needed, provide the log first and let the administrator decide, so the app is not
+     installed under a different account.
 
-其他常见错误
-  1603：汇总错误。先处理更早的具体错误；在 MSI 日志搜索 Return value 3，
-        查看并保留它之前的错误上下文，提供给开发者。
-  1500 / 1618：等待其他软件安装、Windows 更新完成，再重试。
-  1307 / 磁盘空间不足：清理安装盘和系统临时目录所在磁盘，再重试。
-  1303 / 1310 / 1402 / 1406：按原始错误检查具体文件、目录或注册表权限。
-  1308 / 1311 / 1335 / 1619 / 1620：从官方发布页重新下载完整 MSI，并从本机打开。
-  1601 / 1719：Windows Installer 服务不可用，重启后仍失败请管理员检查服务和策略。
-  1625：系统策略阻止安装，请联系电脑管理员并提供日志。
-  1633：确认系统为 Windows 10 1809 或更新版本的 64 位 Windows。
-  文件被占用：退出 Operit2 的窗口、托盘和后台进程，再重新运行 MSI。
+Other common errors
+  1603: Summary error. Address the earlier specific error first; search the MSI log for
+        Return value 3, review the error context before it, and provide it to the developer.
+  1500 / 1618: Wait for other software installations and Windows updates, then retry.
+  1307 / not enough disk space: Free space on the install drive and on the drive holding
+        the system temporary folder, then retry.
+  1303 / 1310 / 1402 / 1406: Check the specific file, folder, or registry permissions in
+        the original error.
+  1308 / 1311 / 1335 / 1619 / 1620: Download the complete MSI again from the official
+        release page and open it locally.
+  1601 / 1719: Windows Installer service unavailable; restart, and if it still fails ask
+        the administrator to check the service and policy.
+  1625: System policy blocks the installation; contact the computer administrator and
+        provide the log.
+  1633: Confirm the system is 64-bit Windows 10 version 1809 or later.
+  File in use: Exit Operit2 windows, tray icons, and background processes, then run the MSI again.
 
-MSI 安装版
-  在 Windows 设置 → 应用 → 已安装的应用中卸载 Operit2。
-  也可以通过开始菜单的 Operit2 Uninstall，或再次打开 MSI → 卸载应用。
-  卸载默认保留用户数据。完整卸载界面可勾选“同时永久删除本机用户数据”，
-  查看实际数据目录并确认后，才会执行数据清理。
-  只显示系统简化界面的卸载入口会保留数据；需要清理数据时，请使用完整卸载界面，
-  或先运行本目录的 Operit2DataCleanup.exe，再卸载应用。
+MSI installation
+  Uninstall Operit2 in Windows Settings -> Apps -> Installed apps.
+  You can also use Operit2 Uninstall in the Start menu, or open the MSI again -> Uninstall.
+  Uninstall keeps user data by default. The full uninstall screen lets you select
+  "Also permanently delete local user data"; data cleanup runs only after you review the
+  actual data folders and confirm.
+  Uninstall entry points that show only the basic system UI keep your data; to clean data,
+  use the full uninstall screen, or run Operit2DataCleanup.exe in this folder first and
+  then uninstall.
+  
+Portable version
+  Exit all Operit2 windows, background processes, and command lines first.
+  Run Operit2DataCleanup.exe, review the actual folders, and confirm to permanently clean
+  local user data.
+  After cleanup you can delete the extracted program folder.
+  If you need to delete the program first and clean later, copy Operit2DataCleanup.exe to
+  another folder on its own.
+  The tool does not depend on Flutter, Rust DLLs, or the MSI, but it needs the Windows
+  built-in .NET Framework 4.7.2 or later.
 
-压缩包版
-  请先退出所有 Operit2 窗口、后台进程和命令行。
-  运行 Operit2DataCleanup.exe，查看实际目录，确认后可永久清理本机用户数据。
-  清理结束后可以删除解压的程序目录。
-  需要先删除程序、稍后清理时，可先将 Operit2DataCleanup.exe 单独保存到其他目录。
-  该工具不依赖 Flutter、Rust DLL 或 MSI，但需要 Windows 自带的 .NET Framework 4.7.2 或更新版本。
+Cleanup scope
+  %APPDATA%\Operit2 (including the pinned startup configuration, default data, and workspaces)
+  The custom runtimeRoot and workspaceRoot folders recorded in the startup configuration, with all their contents
+  %LOCALAPPDATA%\app.operit\Operit2 (managed runtime)
+  %LOCALAPPDATA%\Operit2 (crash reports)
+  %LOCALAPPDATA%\webview_all_windows\operit2 (browser cache, cookies, and so on)
+  App credentials beginning with Operit2: in Windows Credential Manager
+  Cleanup covers every local identity; the install version, the portable version, and the
+  command line may share this data.
+  Export the chats, plugin data, and workspace files you want to keep first.
+  Cleanup does not send delete instructions to other devices or the cloud.
+  Clear errors are reported when a folder passes through a link, points to a protected
+  location, has a broken configuration, or has files in use.
+  File deletion cannot be undone; a partial failure says cleanup did not fully complete,
+  so follow the message and reopen the tool.
 
-清理范围
-  %APPDATA%\Operit2（包括固定启动配置、默认数据和工作区）
-  启动配置中记录的自定义 runtimeRoot、workspaceRoot 目录及其全部内容
-  %LOCALAPPDATA%\app.operit\Operit2（托管运行环境）
-  %LOCALAPPDATA%\Operit2（崩溃报告）
-  %LOCALAPPDATA%\webview_all_windows\operit2（浏览器缓存、Cookie 等）
-  Windows 凭据管理器中以 Operit2: 开头的应用凭据
-  清理会覆盖本机所有身份；安装版、压缩包版和命令行可能共用这些数据。
-  请先导出需要保留的聊天、插件数据和工作区文件。
-  清理不会向其他设备或云端发送删除指令。
-  目录经过链接、指向受保护位置、配置损坏或文件被占用时会明确报错。
-  文件删除无法回滚；中途失败会说明未全部完成，请按提示处理后重新打开工具。
+Program entry points
+  A normal MSI uninstall removes the desktop, Start menu, and operit2:// protocol entries
+  that belong to the current installation copy.
+  The standalone cleanup tool only handles data; it does not uninstall the MSI and does not
+  remove programs or shortcuts of other copies.
+  Deleting the program folder does not automatically delete user data stored in AppData or
+  custom locations.
 
-程序入口
-  MSI 普通卸载会清除属于当前安装副本的桌面、开始菜单和 operit2:// 协议入口。
-  独立清理工具只负责数据，不卸载 MSI，不删除其他副本的程序或快捷方式。
-  删除程序目录不会自动删除存放在 AppData 或自定义位置的用户数据。
-
-无人值守 MSI
-  默认保留数据：msiexec /x {ProductCode} /qn
-  明确要求清理：msiexec /x {ProductCode} /qn OPERIT_DELETE_USER_DATA=1
-  请使用当前用户身份执行，关闭所有 Operit2 进程，并在运行前备份自定义目录。
-  自动升级、同版本覆盖安装、修复均不会清理用户数据。
+Unattended MSI
+  Keep data (default): msiexec /x {ProductCode} /qn
+  Explicitly request cleanup: msiexec /x {ProductCode} /qn OPERIT_DELETE_USER_DATA=1
+  Run as the current user, close all Operit2 processes, and back up custom folders before running.
+  Automatic upgrades, same-version reinstalls, and repairs never clean up user data.

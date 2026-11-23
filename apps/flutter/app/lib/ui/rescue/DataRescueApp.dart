@@ -39,7 +39,7 @@ class DataRescueApp extends StatelessWidget {
   /// Builds only framework widgets and a fixed theme independent of user preferences.
   @override
   Widget build(BuildContext context) => MaterialApp(
-    title: 'Operit2 数据救援 / Data Rescue',
+    title: 'Operit2 Data Rescue',
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
       colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff245f9e)),

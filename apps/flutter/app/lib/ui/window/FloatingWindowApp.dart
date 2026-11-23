@@ -40,7 +40,7 @@ class _FloatingWindowAppState extends State<FloatingWindowApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       color: Colors.transparent,
-      locale: Locale(payload['locale'] as String),
+      locale: Locale(payload['locale'] as String? ?? 'en'),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(

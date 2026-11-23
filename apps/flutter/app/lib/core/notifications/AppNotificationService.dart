@@ -129,13 +129,9 @@ class AppNotificationService with WidgetsBindingObserver {
     _subscription = null;
   }
 
-  /// Resolves notification wording against the current device locales.
-  AppLocalizations _localizations() => lookupAppLocalizations(
-    basicLocaleListResolution(
-      WidgetsBinding.instance.platformDispatcher.locales,
-      AppLocalizations.supportedLocales,
-    ),
-  );
+  /// Resolves notification wording with English as the application default.
+  AppLocalizations _localizations() =>
+      lookupAppLocalizations(const Locale('en'));
 
   /// Sends one system notification only while this application is not foregrounded.
   Future<void> _sendWhenBackground(

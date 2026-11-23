@@ -118,7 +118,10 @@ def check_pkg_config_package(package: str) -> CheckResult:
 
 # Returns every Rust target installed through rustup.
 def installed_rust_targets() -> set[str]:
-    result = command_output(["rustup", "target", "list", "--installed"])
+    rustup = shutil.which("rustup")
+    if rustup is None:
+        return set()
+    result = command_output([rustup, "target", "list", "--installed"])
     if result.returncode != 0:
         return set()
     return {line.strip() for line in result.stdout.splitlines() if line.strip()}

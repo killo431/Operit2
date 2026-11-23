@@ -97,35 +97,35 @@ public static class CleanupTests
         Directory.CreateDirectory(root);
         try
         {
-            var diagnostics = new SetupDiagnostics(root, "2.0.0-preview.32", @"C:\安装包\Operit2.msi", @"C:\日志\MSI123.log");
-            diagnostics.StartAction("InstallFiles", "正在复制文件");
+            var diagnostics = new SetupDiagnostics(root, "2.0.0-preview.32", @"C:\packages\Operit2.msi", @"C:\logs\MSI123.log");
+            diagnostics.StartAction("InstallFiles", "Copying files");
             diagnostics.AddFailure(2502, "original failure");
-            diagnostics.StartAction("InstallFinalize", "正在回滚");
+            diagnostics.StartAction("InstallFinalize", "Rolling back");
             diagnostics.AddFailure(2503, "later failure");
             diagnostics.AddFailure(1603, "summary failure");
             diagnostics.AddFailure(9999, "unrecognized failure");
             string report = diagnostics.Describe();
             Require(report.IndexOf("original failure", StringComparison.Ordinal) < report.IndexOf("later failure", StringComparison.Ordinal));
-            Require(report.Contains("发生步骤：InstallFiles") && report.Contains("发生步骤：InstallFinalize"));
-            Require(report.Contains("2502、2503") && report.Contains("%TEMP%") && report.Contains("Return value 3"));
-            Require(diagnostics.Problem().Title == "Windows 安装服务出错");
+            Require(report.Contains("Step: InstallFiles") && report.Contains("Step: InstallFinalize"));
+            Require(report.Contains("2502, 2503") && report.Contains("%TEMP%") && report.Contains("Return value 3"));
+            Require(diagnostics.Problem().Title == "Windows Installer service error");
             Require(diagnostics.Problem().Reason.Contains("2502") && !diagnostics.Problem().Reason.Contains("1603"));
-            Require(report.Contains("当前错误尚无专门的处理说明") && report.Contains(@"C:\日志\MSI123.log"));
-            Require(report.Contains("msiexec.exe /i \"C:\\安装包\\Operit2.msi\" /L*V"));
+            Require(report.Contains("There is no specific guidance for this error yet") && report.Contains(@"C:\logs\MSI123.log"));
+            Require(report.Contains("msiexec.exe /i \"C:\\packages\\Operit2.msi\" /L*V"));
             Require(File.ReadAllText(diagnostics.LogPath).Contains("original failure"));
             var another = new SetupDiagnostics(root, "test", "test.msi", "");
             Require(another.LogPath != diagnostics.LogPath);
-            Require(another.Describe().Contains("Windows Installer 未提供日志路径"));
+            Require(another.Describe().Contains("Windows Installer did not provide a log path"));
             Require(!another.HasErrors);
             another.AddFailure(0, "file in use by process 123");
-            Require(another.Describe().Contains("Windows Installer 未提供数字错误码"));
+            Require(another.Describe().Contains("Windows Installer provided no numeric error code"));
             using (var locked = new FileStream(another.LogPath, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
                 another.Write("Error", "cannot write");
-            Require(another.LoggingError != null && another.Describe().Contains("诊断日志写入失败"));
+            Require(another.LoggingError != null && another.Describe().Contains("Failed to write the diagnostic log"));
             Require(another.Describe().Contains("file in use by process 123"));
             var blocked = new SetupDiagnostics(root, "test", "test.msi", "");
             blocked.AddFailure(0, "file locked", filesInUse: true);
-            Require(blocked.Problem().Title == "Operit2 还在运行");
+            Require(blocked.Problem().Title == "Operit2 is still running");
         }
         finally { Directory.Delete(root, true); }
     }

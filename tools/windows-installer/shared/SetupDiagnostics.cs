@@ -25,7 +25,7 @@ namespace Operit.Installer
         public string MsiLogPath { get; }
         public string PackagePath { get; }
         public string Version { get; }
-        public string CurrentAction { get; private set; } = "初始化安装界面";
+        public string CurrentAction { get; private set; } = "Initializing the setup interface";
         public string LoggingError { get; private set; }
         public bool HasErrors { get { lock (sync) return failures.Count != 0; } }
 
@@ -38,9 +38,9 @@ namespace Operit.Installer
             Directory.CreateDirectory(directory);
             LogPath = Path.Combine(directory, "Operit2-setup-" + DateTime.Now.ToString("yyyyMMdd-HHmmss")
                 + "-" + Guid.NewGuid().ToString("N") + ".log");
-            File.WriteAllText(LogPath, "Operit2 安装诊断\r\n版本：" + version + "\r\n安装包：" + packagePath
-                + "\r\nWindows：" + Environment.OSVersion + "\r\n进程位数：" + (Environment.Is64BitProcess ? "64" : "32")
-                + "\r\nTEMP：" + Path.GetTempPath() + "\r\nMSI 详细日志：" + msiLogPath + "\r\n", new UTF8Encoding(true));
+            File.WriteAllText(LogPath, "Operit2 setup diagnostics\r\nVersion: " + version + "\r\nPackage: " + packagePath
+                + "\r\nWindows: " + Environment.OSVersion + "\r\nProcess bitness: " + (Environment.Is64BitProcess ? "64" : "32")
+                + "\r\nTEMP: " + Path.GetTempPath() + "\r\nMSI verbose log: " + msiLogPath + "\r\n", new UTF8Encoding(true));
         }
 
         /// <summary>Records the exact MSI action before its messages arrive.</summary>
@@ -65,8 +65,8 @@ namespace Operit.Installer
                     firstFilesInUse = filesInUse;
                 }
                 if (code > 0 && !codes.Contains(code)) codes.Add(code);
-                string failure = (code > 0 ? "错误码：" + code + "\r\n" : "")
-                    + "发生步骤：" + CurrentAction + "\r\n原始错误：" + message;
+                string failure = (code > 0 ? "Error code: " + code + "\r\n" : "")
+                    + "Step: " + CurrentAction + "\r\nOriginal error: " + message;
                 failures.Add(failure);
                 Write("Error", failure);
             }
@@ -77,70 +77,70 @@ namespace Operit.Installer
         {
             lock (sync)
             {
-                string title = "安装失败";
-                string reason = "安装程序未能完成操作。";
-                string steps = "请点击“复制错误信息”，将信息和本次日志发给开发者排查。";
+                string title = "Setup failed";
+                string reason = "Setup could not complete the operation.";
+                string steps = "Click \"Copy error details\" and send the information and this log to the developer.";
                 if (firstAction == "OperitCloseApplications" || firstFilesInUse)
                 {
-                    title = "Operit2 还在运行";
-                    reason = "未能自动退出，占用的文件无法替换。";
-                    steps = "1. 右键任务栏右下角的 Operit2 图标，选择“退出”。\n2. 仍无法退出时，在任务管理器中结束 Operit2，然后重新安装。";
+                    title = "Operit2 is still running";
+                    reason = "It could not be closed automatically, so the files in use cannot be replaced.";
+                    steps = "1. Right-click the Operit2 icon in the notification area and choose Exit.\n2. If it still will not exit, end Operit2 in Task Manager, then run setup again.";
                 }
                 else switch (firstCode)
                 {
                     case 2502:
                     case 2503:
-                        title = "Windows 安装服务出错";
-                        reason = firstCode == 2502 ? "Windows 安装服务在收尾时失败。" : "Windows 安装服务未能执行安装步骤。";
-                        steps = "1. 重启电脑后，重新打开安装包。\n2. 仍然报错时，点击“复制错误信息”，将信息和本次日志发给开发者。";
+                        title = "Windows Installer service error";
+                        reason = firstCode == 2502 ? "Windows Installer failed during finalization." : "Windows Installer could not run the installation steps.";
+                        steps = "1. Restart the computer, then open the installer again.\n2. If it still fails, click \"Copy error details\" and send the information and this log to the developer.";
                         break;
                     case 5: case 1303: case 1310: case 1402: case 1406: case 1925:
-                        title = "没有权限写入安装文件";
-                        reason = "Windows 拒绝访问安装所需的文件夹、文件或注册表。";
-                        steps = "1. 首次安装时使用默认安装位置。\n2. 仍然失败时，将日志交给电脑管理员，修复日志中被拒绝访问的具体位置。";
+                        title = "No permission to write the installation files";
+                        reason = "Windows denied access to a folder, file, or registry key required for installation.";
+                        steps = "1. Use the default install location for a first install.\n2. If it still fails, give the log to the computer administrator to fix the exact location that was denied.";
                         break;
                     case 112: case 1307:
-                        title = "磁盘空间不足";
-                        reason = "安装目录或系统临时目录所在磁盘没有足够空间。";
-                        steps = "清理系统盘和安装盘的空间，然后重新安装。";
+                        title = "Not enough disk space";
+                        reason = "The install folder or the system temporary folder is on a disk without enough free space.";
+                        steps = "Free up space on the system drive and the install drive, then install again.";
                         break;
                     case 1308: case 1311: case 1335: case 1619: case 1620:
-                        title = "安装包无法读取";
-                        reason = "安装文件可能没有下载完整，或已被损坏、隔离。";
-                        steps = "从官方发布页重新下载 MSI，保存到电脑本机文件夹后打开。";
+                        title = "The installer cannot be read";
+                        reason = "The installation file may not have downloaded completely, or it was damaged or quarantined.";
+                        steps = "Download the MSI again from the official release page, save it to a local folder, and open it.";
                         break;
                     case 1500: case 1618:
-                        title = "另一个安装任务正在运行";
-                        reason = "Windows 正在安装其他软件或更新系统。";
-                        steps = "等待其他安装和 Windows 更新完成后重试；仍然提示时重启电脑。";
+                        title = "Another installation is in progress";
+                        reason = "Windows is installing other software or updating the system.";
+                        steps = "Wait for the other installation and Windows updates to finish, then retry; restart the computer if the message persists.";
                         break;
                     case 1601: case 1719:
-                        title = "Windows 安装服务不可用";
-                        reason = "系统无法启动或访问 Windows Installer 服务。";
-                        steps = "先重启电脑；仍然失败时，请电脑管理员检查 Windows Installer 服务是否被禁用。";
+                        title = "Windows Installer service unavailable";
+                        reason = "The system cannot start or access the Windows Installer service.";
+                        steps = "Restart the computer first; if it still fails, ask the administrator to check whether the Windows Installer service is disabled.";
                         break;
                     case 1625:
-                        title = "电脑的安全策略禁止安装";
-                        reason = "本次安装被 Windows 或单位管理策略阻止。";
-                        steps = "请将错误信息和日志交给电脑管理员处理。";
+                        title = "Security policy blocks installation";
+                        reason = "This installation was blocked by Windows or by an organizational policy.";
+                        steps = "Give the error information and log to the computer administrator.";
                         break;
                     case 1633:
-                        title = "安装包不支持此系统";
-                        reason = "此安装包需要 Windows 10 1809 或更新版本的 64 位 Windows。";
-                        steps = "请检查 Windows 版本，并使用匹配系统的安装包。";
+                        title = "The installer does not support this system";
+                        reason = "This installer requires 64-bit Windows 10 version 1809 or later.";
+                        steps = "Check the Windows version and use the installer that matches the system.";
                         break;
                     case 1612: case 1706:
-                        title = "找不到原来的安装包";
-                        reason = "修复、升级或卸载需要原版本的 MSI 文件。";
-                        steps = "下载当前已安装版本对应的官方 MSI，在系统要求时选择该文件。";
+                        title = "The original installer cannot be found";
+                        reason = "Repair, upgrade, or uninstall needs the MSI from the installed version.";
+                        steps = "Download the official MSI for the currently installed version and select it when the system asks.";
                         break;
                     case 1638:
-                        title = "已安装其他版本";
-                        reason = "电脑中已有与此安装包冲突的 Operit2 版本。";
-                        steps = "在 Windows 设置 → 应用中查看 Operit2 版本，下载相同或更新版本的安装包。";
+                        title = "Another version is already installed";
+                        reason = "This PC already has an Operit2 version that conflicts with this installer.";
+                        steps = "Check the Operit2 version in Windows Settings > Apps, and download the same or a newer installer.";
                         break;
                 }
-                if (firstCode > 0) reason += "（错误 " + firstCode + "）";
+                if (firstCode > 0) reason += " (error " + firstCode + ")";
                 return new SetupProblem { Title = title, Reason = reason, Steps = steps };
             }
         }
@@ -156,8 +156,8 @@ namespace Operit.Installer
                 }
                 catch (Exception error) when (error is IOException || error is UnauthorizedAccessException)
                 {
-                    LoggingError = "诊断日志写入失败：" + LogPath + "\r\n" + error.Message
-                        + "\r\n请使用“复制错误信息”保存当前信息，并检查磁盘空间和该目录的写入权限。";
+                    LoggingError = "Failed to write the diagnostic log: " + LogPath + "\r\n" + error.Message
+                        + "\r\nUse \"Copy error details\" to save the current information, and check free disk space and write permissions for that folder.";
                 }
             }
         }
@@ -171,26 +171,26 @@ namespace Operit.Installer
         /// <summary>Formats a consistent snapshot while the diagnostic state is locked.</summary>
         private string DescribeReport()
         {
-            var text = new StringBuilder("Operit2 安装诊断\r\n版本：" + Version + "\r\n安装包：" + PackagePath + "\r\n\r\n");
+            var text = new StringBuilder("Operit2 setup diagnostics\r\nVersion: " + Version + "\r\nPackage: " + PackagePath + "\r\n\r\n");
             if (HasErrors)
             {
-                text.AppendLine("检测到的错误码：" + (codes.Count == 0 ? "Windows Installer 未提供数字错误码" : string.Join("、", codes)));
-                text.AppendLine("\r\n首次错误\r\n" + failures[0]);
+                text.AppendLine("Detected error codes: " + (codes.Count == 0 ? "Windows Installer provided no numeric error code" : string.Join(", ", codes)));
+                text.AppendLine("\r\nFirst error\r\n" + failures[0]);
                 foreach (var group in codes.GroupBy(Guidance))
-                    text.AppendLine("\r\n处理建议（" + string.Join(" / ", group) + "）\r\n" + group.Key);
-                if (codes.Count == 0) text.AppendLine("请按下面的原始错误检查文件占用、安装目录和系统权限；无法解决时请提供本页详情及日志。");
-                text.AppendLine("\r\n原始错误（按发生顺序保留）\r\n" + string.Join("\r\n\r\n", failures));
+                    text.AppendLine("\r\nSuggested action (" + string.Join(" / ", group) + ")\r\n" + group.Key);
+                if (codes.Count == 0) text.AppendLine("Check file locks, the install folder, and system permissions using the original error below; if it cannot be resolved, provide this page and the logs.");
+                text.AppendLine("\r\nOriginal errors (kept in order of occurrence)\r\n" + string.Join("\r\n\r\n", failures));
             }
-            else text.AppendLine("尚未收到 Windows Installer 的具体错误。当前步骤：" + CurrentAction);
-            text.AppendLine("\r\n诊断日志：" + LogPath);
-            text.AppendLine("MSI 详细日志：" + (string.IsNullOrWhiteSpace(MsiLogPath)
-                ? "Windows Installer 未提供日志路径。请按下方命令生成详细日志。" : MsiLogPath));
+            else text.AppendLine("No specific Windows Installer error has been received yet. Current step: " + CurrentAction);
+            text.AppendLine("\r\nDiagnostic log: " + LogPath);
+            text.AppendLine("MSI verbose log: " + (string.IsNullOrWhiteSpace(MsiLogPath)
+                ? "Windows Installer did not provide a log path. Generate a verbose log using the command below." : MsiLogPath));
             if (LoggingError != null) text.AppendLine("\r\n" + LoggingError);
-            text.AppendLine("\r\n需要反馈时：点击“复制错误信息”，并附上诊断日志和 MSI 详细日志。发送前可检查其中的用户名及本机路径。");
-            text.AppendLine("\r\n安装窗口出现前就报错，或需要重新采集完整日志时：\r\n"
-                + "1. 按 Win+R，输入 cmd，按回车。\r\n2. 输入以下命令（把引号内的路径改为实际下载的 MSI 文件路径）：\r\n"
+            text.AppendLine("\r\nWhen reporting: click \"Copy error details\" and attach the diagnostic log and the MSI verbose log. You can review usernames and local paths before sending.");
+            text.AppendLine("\r\nIf the error occurs before the setup window appears, or you need a fresh full log:\r\n"
+                + "1. Press Win+R, type cmd, and press Enter.\r\n2. Enter the command below (replace the path in quotes with the actual downloaded MSI path):\r\n"
                 + "msiexec.exe /i \"" + PackagePath + "\" /L*V \"%USERPROFILE%\\Desktop\\Operit2-install.log\"\r\n"
-                + "3. 按安装界面操作。结束后在桌面找到 Operit2-install.log；桌面被重定向时，请把日志参数改为你有写入权限的完整路径。");
+                + "3. Follow the setup UI. When finished, find Operit2-install.log on the desktop; if the desktop is redirected, change the log argument to a full path you can write to.");
             return text.ToString();
         }
 
@@ -201,54 +201,54 @@ namespace Operit.Installer
             {
                 case 2502:
                 case 2503:
-                    return "Windows Installer 安装事务状态异常。2502 表示在没有进行中的安装事务时调用了 InstallFinalize；2503 表示未标记为正在安装时调用了 RunScript。\r\n"
-                        + "仅凭此代码无法确认根因；请同时查看前面发生的错误和 MSI 详细日志。\r\n"
-                        + "1. 保存本页详情和日志，关闭其他安装程序，重启 Windows 后用当前登录账户重试。\r\n"
-                        + "2. 将 MSI 下载到本机文件夹后打开，首次安装使用默认安装位置；不要从压缩包、网络共享或无写入权限的目录运行。\r\n"
-                        + "3. 按 Win+R，输入 %TEMP%，尝试新建并删除一个文本文件。若提示拒绝访问，让管理员检查该用户临时目录的权限；同时检查磁盘剩余空间。\r\n"
-                        + "4. 查看 Windows 安全中心的保护历史记录或单位安全软件的拦截记录。只有日志确认权限问题时，才请管理员检查日志中明确拒绝访问的目录（包括 Windows\\Temp 或 Windows\\Installer）。不要删除 Windows\\Installer，也不要给 Everyone 开放完全控制。\r\n"
-                        + "5. Operit2 默认仅为当前用户安装。需要管理员协助时请提供日志，由管理员确认处理方式，避免切换账户后装到另一个用户下。";
+                    return "The Windows Installer transaction state is abnormal. 2502 means InstallFinalize was called without an active install transaction; 2503 means RunScript was called without being marked as installing.\r\n"
+                        + "This code alone cannot confirm the root cause; also review the errors that occurred before it and the MSI verbose log.\r\n"
+                        + "1. Save this page and the logs, close other installers, restart Windows, and retry with the current signed-in account.\r\n"
+                        + "2. Download the MSI to a local folder and open it; use the default install location for a first install, and do not run it from an archive, network share, or a folder without write permission.\r\n"
+                        + "3. Press Win+R, type %TEMP%, and try creating and deleting a text file. If access is denied, have the administrator check permissions on that user temporary folder, and check free disk space.\r\n"
+                        + "4. Check Windows Security protection history or your organization's security software blocks. Only ask the administrator to inspect the specific folder the log shows as denied (including Windows\\Temp or Windows\\Installer) once the log confirms a permission problem. Do not delete Windows\\Installer, and do not grant Everyone full control.\r\n"
+                        + "5. Operit2 installs for the current user only by default. If administrator help is needed, provide the log and let the administrator decide how to proceed, so the app is not installed under a different account.";
                 case 5:
                 case 1303:
                 case 1310:
                 case 1402:
                 case 1406:
                 case 1925:
-                    return "无法访问所需文件夹、文件或注册表项。\r\n1. 从原始错误找到被拒绝访问的具体路径或注册表项。\r\n2. 首次安装使用默认的当前用户目录；确认该目录有写入权限。\r\n3. 检查安全软件拦截记录；公司电脑请让管理员按日志修正权限，不要更改整个系统目录的权限。";
+                    return "A required folder, file, or registry key cannot be accessed.\r\n1. Find the exact denied path or registry key in the original error.\r\n2. Use the default current-user folder for a first install, and confirm that folder is writable.\r\n3. Check security software blocks; on a company computer, ask the administrator to correct permissions based on the log rather than changing permissions for an entire system folder.";
                 case 112:
                 case 1307:
-                    return "磁盘空间不足。\r\n1. 检查安装目录和系统盘的剩余空间，MSI 解压也会使用系统临时目录。\r\n2. 使用 Windows 设置中的存储清理释放空间，再重新运行安装程序。";
+                    return "Not enough disk space.\r\n1. Check free space on the install folder and the system drive; MSI extraction also uses the system temporary folder.\r\n2. Use Storage cleanup in Windows Settings to free space, then run the installer again.";
                 case 1308:
                 case 1311:
                 case 1335:
                 case 1619:
                 case 1620:
-                    return "安装包无法读取、内容缺失或损坏。\r\n1. 删除这份下载不完整的 MSI，从 Operit2 官方发布页重新下载。\r\n2. 保存到本机文件夹后运行，检查安全软件是否隔离了文件。\r\n3. 再次失败时提供安装包文件名、下载来源和日志。";
+                    return "The installer cannot be read, is incomplete, or is corrupted.\r\n1. Delete this incomplete download and download it again from the official Operit2 release page.\r\n2. Save it to a local folder and run it there, and check whether security software quarantined the file.\r\n3. If it fails again, provide the installer file name, download source, and log.";
                 case 1500:
                 case 1618:
-                    return "另一个 Windows 安装任务正在运行。\r\n1. 等待其他软件安装或 Windows 更新结束。\r\n2. 关闭其他安装窗口后重试；仍然提示时重启 Windows。不要强行结束正在更新系统的安装服务。";
+                    return "Another Windows installation task is running.\r\n1. Wait for other software installations or Windows updates to finish.\r\n2. Close other setup windows and retry; restart Windows if the message persists. Do not forcefully stop an installer that is updating the system.";
                 case 1601:
                 case 1719:
-                    return "无法访问 Windows Installer 服务。\r\n1. 重启 Windows 后重试。\r\n2. 按 Win+R，输入 services.msc，查看 Windows Installer 服务是否被禁用；请管理员检查服务及系统策略。";
+                    return "The Windows Installer service cannot be accessed.\r\n1. Restart Windows and retry.\r\n2. Press Win+R, type services.msc, and check whether the Windows Installer service is disabled; ask the administrator to review the service and system policy.";
                 case 1602:
-                    return "安装被取消。重新打开 MSI 可再次执行；若没有主动取消，请查看前面的具体错误和日志。";
+                    return "The installation was canceled. Open the MSI again to retry; if you did not cancel it, review the specific error and log above.";
                 case 1603:
-                    return "Windows Installer 报告安装失败（汇总错误）。这个代码本身不能说明根因。\r\n1. 先处理本页其他错误码和原始错误。\r\n2. 打开 MSI 详细日志，查找 Return value 3，并保留它前面的错误上下文。\r\n3. 将本页详情与日志提供给开发者，不需要反复尝试相同安装。";
+                    return "Windows Installer reported a failure (summary error). This code alone does not indicate the root cause.\r\n1. First address the other error codes and original errors on this page.\r\n2. Open the MSI verbose log, find Return value 3, and keep the error context preceding it.\r\n3. Provide this page and the log to the developer; there is no need to repeat the same installation.";
                 case 1638:
-                    return "已存在冲突版本。\r\n在 Windows 设置 → 应用 → 已安装的应用中确认 Operit2 版本，并下载相同或更新版本的安装包；移除现有版本前先保留并备份用户数据。";
+                    return "A conflicting version already exists.\r\nCheck the Operit2 version in Windows Settings > Apps > Installed apps, and download the same or a newer installer; back up and keep user data before removing the existing version.";
                 case 1625:
-                    return "安装被系统策略禁止。请联系电脑管理员，并提供此错误和日志；需要管理员检查软件安装限制或单位安全策略。";
+                    return "The installation is blocked by system policy. Contact the computer administrator and provide this error and the log; the administrator needs to review software installation restrictions or organizational security policy.";
                 case 1633:
-                    return "此安装包不支持当前系统。请确认使用 Windows 10 1809 或更新版本的 64 位 Windows，并下载匹配系统的安装包。";
+                    return "This installer does not support the current system. Confirm that you are using 64-bit Windows 10 version 1809 or later, and download the installer that matches the system.";
                 case 1612:
                 case 1706:
-                    return "修复、升级或卸载需要的原始安装源不可用。请下载当前已安装版本对应的官方 MSI，并在系统要求时指定该文件；仍失败请提供日志，不要手工删除 Windows Installer 缓存或产品登记。";
+                    return "The original installation source required for repair, upgrade, or uninstall is unavailable. Download the official MSI for the currently installed version and specify it when the system asks; if it still fails, provide the log and do not manually delete the Windows Installer cache or product registration.";
                 case 1721:
                 case 1722:
                 case 1723:
-                    return "安装所需的自定义操作执行失败。查看原始错误中的操作名称和日志里该操作的异常；关闭 Operit2 的所有窗口及后台进程后重试，仍失败请将日志发给开发者。";
+                    return "A custom action required by the installation failed. Review the action name in the original error and that action's exception in the log; close all Operit2 windows and background processes and retry, and if it still fails, send the log to the developer.";
                 default:
-                    return "当前错误尚无专门的处理说明。请保留下面的原始错误和出错步骤，打开 MSI 详细日志查看上下文，并将本页详情及日志提供给开发者。";
+                    return "There is no specific guidance for this error yet. Keep the original error and the failing step below, open the MSI verbose log to review the context, and provide this page and the log to the developer.";
             }
         }
     }

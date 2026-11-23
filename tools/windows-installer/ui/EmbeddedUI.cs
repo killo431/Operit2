@@ -45,16 +45,16 @@ namespace Operit.Installer
                 if (diagnostics != null)
                 {
                     diagnostics.AddFailure(0, error.ToString());
-                    details = error.Message + "\r\n\r\n诊断日志：" + diagnostics.LogPath
-                        + "\r\n请把此错误和日志提供给开发者。";
+                    details = error.Message + "\r\n\r\nDiagnostic log: " + diagnostics.LogPath
+                        + "\r\nPlease provide this error and the log to the developer.";
                 }
-                else details = "无法创建安装诊断日志，安装尚未开始。\r\n日志目录：" + logDirectory
-                    + "\r\n原始错误：" + error.Message + "\r\n请检查该目录的写入权限和磁盘空间。\r\n"
-                    + "也可以在命令提示符中运行下列命令，记录 Windows Installer 的具体错误：\r\n"
+                else details = "Could not create the setup diagnostic log; setup has not started.\r\nLog folder: " + logDirectory
+                    + "\r\nOriginal error: " + error.Message + "\r\nCheck write permissions and free disk space for that folder.\r\n"
+                    + "You can also run the following command in a command prompt to record the exact Windows Installer error:\r\n"
                     + "msiexec.exe /i \"" + session["OriginalDatabase"] + "\" /L*V \"%USERPROFILE%\\Desktop\\Operit2-install.log\"";
-                MessageBox.Show("安装界面无法启动。\r\n\r\n" + details
-                    + "\r\n\r\n在此提示框按 Ctrl+C 可复制完整内容。", "Operit2 安装失败", MessageBoxButton.OK, MessageBoxImage.Error);
-                throw new InstallerException("Operit2 安装初始化失败：" + error.Message, error);
+                MessageBox.Show("The setup interface could not start.\r\n\r\n" + details
+                    + "\r\n\r\nPress Ctrl+C in this dialog to copy the full text.", "Operit2 setup failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw new InstallerException("Operit2 setup initialization failed: " + error.Message, error);
             }
         }
 
@@ -77,11 +77,11 @@ namespace Operit.Installer
                 thread.Join();
                 start.Dispose();
                 exit.Dispose();
-                if (startupError != null) throw new InstallerException("Operit2 安装界面无法启动。", startupError);
+                if (startupError != null) throw new InstallerException("The Operit2 setup interface could not start.", startupError);
                 throw new InstallCanceledException();
             }
             session["INSTALLFOLDER"] = window.InstallFolder;
-            diagnostics.Write("Selection", "操作：" + window.Operation + "；安装目录：" + window.InstallFolder);
+            diagnostics.Write("Selection", "Operation: " + window.Operation + "; install folder: " + window.InstallFolder);
             if (installed && window.Operation == SetupOperation.Repair)
             {
                 session["REINSTALL"] = "ALL";
@@ -105,7 +105,7 @@ namespace Operit.Installer
                     return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", "Operit2");
                 string installedFolder = key.GetValue("InstallLocation") as string;
                 if (string.IsNullOrEmpty(installedFolder))
-                    throw new InstallerException("现有 Operit2 安装信息不完整：缺少安装目录。");
+                    throw new InstallerException("Existing Operit2 installation information is incomplete: the install folder is missing.");
                 return installedFolder;
             }
         }
@@ -140,12 +140,12 @@ namespace Operit.Installer
                 }
                 if (action == "OperitInstallCompleted") committed = true;
                 string label = null;
-                if (action == "OperitCloseApplications") label = "正在关闭已运行的 Operit2…";
-                if (action == "OperitFinishRemoval") label = "正在清理应用入口及所选用户数据…";
-                if (action == "InstallFiles") label = "正在安装应用文件…";
-                if (action == "CreateShortcuts") label = "正在创建快捷方式…";
-                if (action == "RemoveFiles") label = "正在移除应用文件…";
-                if (action == "RegisterProduct") label = "正在完成安装…";
+                if (action == "OperitCloseApplications") label = "Closing running Operit2…";
+                if (action == "OperitFinishRemoval") label = "Cleaning up app entries and selected user data…";
+                if (action == "InstallFiles") label = "Installing application files…";
+                if (action == "CreateShortcuts") label = "Creating shortcuts…";
+                if (action == "RemoveFiles") label = "Removing application files…";
+                if (action == "RegisterProduct") label = "Finishing installation…";
                 UpdateProgress(label);
             }
             if (messageType == InstallMessage.Progress && record != null && record.FieldCount >= 2)
@@ -177,14 +177,14 @@ namespace Operit.Installer
             {
                 committed = false;
                 int code = record != null && record.FieldCount >= 1 ? record.GetInteger(1) : 0;
-                diagnostics.AddFailure(code, record == null ? "Windows Installer 报告致命错误，但未提供错误记录。" : record.ToString());
+                diagnostics.AddFailure(code, record == null ? "Windows Installer reported a fatal error but supplied no error record." : record.ToString());
                 window.Dispatcher.Invoke(new Action(window.ShowFailure));
             }
             if (messageType == InstallMessage.FilesInUse || messageType == InstallMessage.RMFilesInUse)
             {
                 committed = false;
-                diagnostics.AddFailure(0, "Operit2 或相关文件正在使用中。请退出 Operit2 的所有窗口、托盘和后台进程后重新运行安装程序。\r\n"
-                    + (record == null ? "Windows Installer 未提供占用进程详情。" : record.ToString()), filesInUse: true);
+                diagnostics.AddFailure(0, "Operit2 or a related file is in use. Close all Operit2 windows, tray icons, and background processes, then run setup again.\r\n"
+                    + (record == null ? "Windows Installer did not provide details about the holding process." : record.ToString()), filesInUse: true);
                 window.Dispatcher.Invoke(new Action(window.ShowFailure));
                 return MessageResult.Cancel;
             }
@@ -205,7 +205,7 @@ namespace Operit.Installer
         public void Shutdown()
         {
             bool success = committed && !diagnostics.HasErrors;
-            diagnostics.Write("Result", success ? "操作完成" : "操作未完成；用户请求取消：" + window.CancelRequested);
+            diagnostics.Write("Result", success ? "Operation completed" : "Operation did not complete; user requested cancel: " + window.CancelRequested);
             window.Dispatcher.BeginInvoke(new Action(() => window.Complete(success)));
             thread.Join();
             start.Dispose();

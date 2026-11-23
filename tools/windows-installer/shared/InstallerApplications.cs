@@ -18,10 +18,10 @@ namespace Operit.Installer
             try
             {
                 Check(RmRegisterResources(session, 1, new[] { executable }, 0, IntPtr.Zero, 0, null));
-                log("正在关闭占用此安装副本的进程：" + executable);
+                log("Closing processes that hold this installation copy: " + executable);
                 // RmForceShutdown lets Windows close applications that do not respond to session shutdown.
                 Check(RmShutdown(session, 1, IntPtr.Zero));
-                log("Windows Restart Manager 已完成关闭应用。");
+                log("Windows Restart Manager finished closing the application.");
             }
             finally { RmEndSession(session); }
         }
@@ -30,8 +30,8 @@ namespace Operit.Installer
         private static void Check(uint result)
         {
             if (result != 0)
-                throw new Win32Exception((int)result, "无法自动关闭正在运行的 Operit2（系统错误 " + result
-                    + "）。请右键任务栏右下角的 Operit2 图标，选择“退出”，再重新安装。若仍有后台进程，请在任务管理器中结束 Operit2。");
+                throw new Win32Exception((int)result, "Cannot automatically close the running Operit2 (system error " + result
+                    + "). Right-click the Operit2 icon in the notification area, choose Exit, and run setup again. If background processes remain, end Operit2 in Task Manager.");
         }
 
         /// <summary>Creates an isolated Restart Manager session.</summary>

@@ -17,5 +17,6 @@
     "apps/flutter/thirdparty/operit_keep_alive/build",
     "apps/flutter/thirdparty/floating_windows/build"
   ],
-  "cmake.sourceDirectory": "${workspaceFolder}/edge/boards/esp32/ui_port"
+  "cmake.sourceDirectory": "${workspaceFolder}/edge/boards/esp32/ui_port",
+  "python.terminal.useEnvFile": true
 }

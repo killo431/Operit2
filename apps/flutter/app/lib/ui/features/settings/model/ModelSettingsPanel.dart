@@ -7873,7 +7873,6 @@ class _DialogTextField extends StatelessWidget {
     required this.controller,
     required this.label,
     this.requiredField = false,
-    this.obscureText = false,
     this.numberOnly = false,
     this.readOnly = false,
     this.maxLines = 1,

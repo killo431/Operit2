@@ -54,7 +54,7 @@ namespace Operit.Installer
             {
                 session["OPERIT_CLEANUP_FAILED"] = "1";
                 return ReportFailure(session, new InvalidOperationException(
-                    "应用已移除，但清理未全部完成。已删除的数据无法恢复。请使用独立清理工具重试。\n" + error.Message));
+                    "The app was removed, but cleanup did not fully complete. Deleted data cannot be recovered. Retry with the standalone cleanup tool.\n" + error.Message));
             }
         }
 

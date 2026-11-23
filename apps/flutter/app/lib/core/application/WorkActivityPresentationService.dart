@@ -22,12 +22,7 @@ class WorkActivityPresentationService with WidgetsBindingObserver {
     ProxyCoreRuntimeBridge(),
   );
   static WorkPresentationLabels labels = _labelsFor(
-    lookupAppLocalizations(
-      basicLocaleListResolution(
-        WidgetsBinding.instance.platformDispatcher.locales,
-        AppLocalizations.supportedLocales,
-      ),
-    ),
+    lookupAppLocalizations(const Locale('en')),
   );
   String? _localeName;
 
@@ -58,11 +53,7 @@ class WorkActivityPresentationService with WidgetsBindingObserver {
   /// Updates system wording when Flutter reports a change in the device locales.
   @override
   void didChangeLocales(List<Locale>? locales) {
-    _configureLocalizations(
-      lookupAppLocalizations(
-        basicLocaleListResolution(locales, AppLocalizations.supportedLocales),
-      ),
-    );
+    _configureLocalizations(lookupAppLocalizations(const Locale('en')));
   }
 
   /// Applies the resolved locale to future and currently displayed system information.

@@ -289,8 +289,7 @@ class RuntimeFloatingWindowController {
         'route': route,
         'state': request['state'] ?? {},
         'windowId': id,
-        'locale':
-            WidgetsBinding.instance.platformDispatcher.locale.languageCode,
+        'locale': 'en',
       },
       options: options,
       fill: fill,

@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
-  <Package Name="Operit2" Manufacturer="Operit" Language="2052" Codepage="65001"
+  <Package Name="Operit2" Manufacturer="Operit" Language="1033" Codepage="65001"
            Version="$(var.MsiVersion)" UpgradeCode="A60B4E40-8A60-4BCD-AB33-DA7D939E436D"
            Scope="perUser" InstallerVersion="500" Compressed="yes">
-    <SummaryInformation Codepage="936" Description="Operit2 $(var.ReleaseVersion) Windows 安装程序" />
+    <SummaryInformation Codepage="1252" Description="Operit2 $(var.ReleaseVersion) Windows Installer" />
     <MajorUpgrade AllowSameVersionUpgrades="yes" Schedule="afterInstallInitialize"
-                  DowngradeErrorMessage="已安装更新版本的 Operit2，请使用更新的安装包。" />
+                  DowngradeErrorMessage="A newer version of Operit2 is already installed. Please use the newer installer." />
     <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
     <Property Id="OPERIT_WINDOWS_BUILD">
       <RegistrySearch Id="WindowsBuildNumber" Root="HKLM" Key="SOFTWARE\Microsoft\Windows NT\CurrentVersion"
                       Name="CurrentBuildNumber" Type="raw" Bitness="always64" />
     </Property>
     <Launch Condition="Installed OR (VersionNT64 AND OPERIT_WINDOWS_BUILD &gt;= 17763)"
-            Message="Operit2 需要 Windows 10 1809 或更新版本的 64 位 Windows。" />
+            Message="Operit2 requires 64-bit Windows 10 version 1809 or later." />
 
     <Icon Id="OperitIcon" SourceFile="$(var.AppIcon)" />
     <Property Id="ARPPRODUCTICON" Value="OperitIcon" />
     <Property Id="ARPHELPLINK" Value="https://github.com/AAswordman/Operit2" />
     <Property Id="ARPURLINFOABOUT" Value="https://operit.app" />
-    <Property Id="ARPCOMMENTS" Value="Operit2 $(var.ReleaseVersion) · AI 工作空间" />
+    <Property Id="ARPCOMMENTS" Value="Operit2 $(var.ReleaseVersion) · AI Workspace" />
     <Property Id="ARPNOMODIFY" Value="1" />
     <Property Id="OPERIT_RELEASE_VERSION" Value="$(var.ReleaseVersion)" />
     <Property Id="MsiLogging" Value="voicewarmup" />

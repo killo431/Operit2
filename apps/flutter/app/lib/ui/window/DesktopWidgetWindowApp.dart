@@ -28,7 +28,7 @@ class _DesktopWidgetWindowAppState extends State<DesktopWidgetWindowApp> {
   late final _definition = core_proxy.ToolPkgDesktopWidget.fromJson(
     (widget.launch.payload['definition'] as Map).cast<String, Object?>(),
   );
-  String get _locale => widget.launch.payload['locale'] as String;
+  String get _locale => widget.launch.payload['locale'] as String? ?? 'en';
 
   /// Opens plugin application UI in the owning window, preserving this content surface.
   Future<void> _openRoute(String package, String route) async {

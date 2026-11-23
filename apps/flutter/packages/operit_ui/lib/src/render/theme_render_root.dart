@@ -41,6 +41,7 @@ class ThemeRenderRoot extends StatelessWidget {
     this.themeAnimationDuration = kThemeAnimationDuration,
     this.localizationsDelegates,
     this.supportedLocales = const <Locale>[Locale('en', 'US')],
+    this.locale = const Locale('en'),
   });
 
   final ThemePreferenceSnapshot themePreferenceSnapshot;
@@ -55,6 +56,9 @@ class ThemeRenderRoot extends StatelessWidget {
   final Duration themeAnimationDuration;
   final Iterable<LocalizationsDelegate<dynamic>>? localizationsDelegates;
   final Iterable<Locale> supportedLocales;
+
+  /// Locale used when the host does not select one explicitly; defaults to English.
+  final Locale? locale;
 
   /// Sets ambient text typography as well as Material component typography.
   @override
@@ -76,6 +80,7 @@ class ThemeRenderRoot extends StatelessWidget {
       ),
       themeMode: themeMode,
       themeAnimationDuration: themeAnimationDuration,
+      locale: locale,
       localizationsDelegates: localizationsDelegates,
       supportedLocales: supportedLocales,
       builder: (context, child) => DefaultTextStyle(

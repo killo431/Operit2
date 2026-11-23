@@ -61,6 +61,7 @@ jobs:
           "$env:APPDATA\Pub\Cache\bin" | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
 
       - name: Install project Flutter SDK
+        if: inputs.products != 'cli'
         working-directory: apps/flutter/app
         shell: pwsh
         run: fvm install --skip-pub-get

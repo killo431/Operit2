@@ -41,32 +41,32 @@ namespace Operit.Installer
             MsiLogButton.IsEnabled = !string.IsNullOrWhiteSpace(diagnostics.MsiLogPath);
             if (operation == SetupOperation.Update)
             {
-                Heading.Text = "更新 Operit2";
-                Description.Text = "发现已安装的旧版本，更新后即可使用新版本。";
-                MainButton.Content = "更新应用";
-                SecondaryButton.Content = "稍后再说";
+                Heading.Text = "Update Operit2";
+                Description.Text = "An older version is installed. Update to use the new version.";
+                MainButton.Content = "Update app";
+                SecondaryButton.Content = "Not now";
                 LocationText.IsEnabled = false;
                 ChangeLocationButton.Visibility = Visibility.Collapsed;
-                InstallHint.Text = "更新将沿用当前安装位置。\n你的聊天记录、个人设置、插件和工作区会保留。";
+                InstallHint.Text = "The update keeps the current install location.\nYour chats, settings, plugins, and workspaces are preserved.";
             }
             else if (operation == SetupOperation.Repair || operation == SetupOperation.Remove)
             {
                 bool removing = operation == SetupOperation.Remove;
-                Heading.Text = removing ? "卸载 Operit2" : "管理 Operit2";
-                Description.Text = removing ? "移除应用，保留你的聊天记录和个人设置。"
-                    : installed ? "修复应用文件，或从电脑中移除应用。" : "已安装相同版本，可修复应用文件。";
-                MainButton.Content = removing ? "确认卸载" : "修复应用";
-                SecondaryButton.Content = removing ? "取消" : installed ? "卸载应用" : "稍后再说";
+                Heading.Text = removing ? "Uninstall Operit2" : "Manage Operit2";
+                Description.Text = removing ? "Remove the app and keep your chats and personal settings."
+                    : installed ? "Repair the app files, or remove the app from this PC." : "The same version is installed; you can repair the app files.";
+                MainButton.Content = removing ? "Uninstall" : "Repair app";
+                SecondaryButton.Content = removing ? "Cancel" : installed ? "Uninstall app" : "Not now";
                 LocationText.IsEnabled = false;
                 ChangeLocationButton.Visibility = Visibility.Collapsed;
                 InstallHint.Text = removing
-                    ? "默认保留数据。勾选后会删除聊天、设置、插件、工作区和密钥，\n并影响本机共用这些数据的其他副本。"
-                    : installed ? "修复会恢复应用所需的文件。\n卸载会保留你的聊天记录和个人设置。"
-                    : "修复会恢复应用所需的文件。\n你的聊天记录和个人设置会保留。";
+                    ? "Data is kept by default. Selecting this deletes chats, settings, plugins, workspaces, and keys,\nand affects other copies on this PC that share the data."
+                    : installed ? "Repair restores the files the app needs.\nUninstall keeps your chats and personal settings."
+                    : "Repair restores the files the app needs.\nYour chats and personal settings are preserved.";
                 DeleteUserData.Visibility = removing ? Visibility.Visible : Visibility.Collapsed;
                 CleanupDetailsButton.Visibility = removing ? Visibility.Visible : Visibility.Collapsed;
             }
-            InstallHint.Text += "\n开始后会自动退出此安装位置的 Operit2。";
+            InstallHint.Text += "\nWhen it starts, Operit2 at this location is closed automatically.";
         }
 
         /// <summary>Starts an MSI operation or opens the successfully installed application.</summary>
@@ -87,16 +87,16 @@ namespace Operit.Installer
             try
             {
                 if (!Path.IsPathRooted(LocationText.Text))
-                    throw new ArgumentException("请输入完整的安装路径，例如 D:\\Apps\\Operit2。");
+                    throw new ArgumentException("Enter a full install path, for example D:\\Apps\\Operit2.");
                 InstallFolder = Path.GetFullPath(LocationText.Text);
                 if (InstallFolder.TrimEnd('\\').Length < 4)
-                    throw new ArgumentException("请选择一个应用文件夹，不要直接安装到磁盘根目录。");
+                    throw new ArgumentException("Choose an application folder; do not install directly to a drive root.");
                 DeleteData = Operation == SetupOperation.Remove && DeleteUserData.IsChecked == true;
                 if (DeleteData)
                 {
                     var cleanup = new UserDataCleanup(InstallFolder);
                     DataCleanupPlan = cleanup.CreatePlan();
-                    if (MessageBox.Show(this, DataCleanupPlan.Describe(), "确认永久删除本机用户数据",
+                    if (MessageBox.Show(this, DataCleanupPlan.Describe(), "Confirm permanent deletion of local user data",
                         MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) != MessageBoxResult.Yes) return;
                 }
             }
@@ -108,13 +108,13 @@ namespace Operit.Installer
             running = true;
             LocationPanel.Visibility = Visibility.Collapsed;
             ProgressPanel.Visibility = Visibility.Visible;
-            Heading.Text = Operation == SetupOperation.Remove ? "正在卸载…"
-                : Operation == SetupOperation.Update ? "正在更新…"
-                : Operation == SetupOperation.Repair ? "正在修复…" : "正在安装…";
-            Description.Text = "很快就好，请保持安装窗口打开。";
+            Heading.Text = Operation == SetupOperation.Remove ? "Uninstalling…"
+                : Operation == SetupOperation.Update ? "Updating…"
+                : Operation == SetupOperation.Repair ? "Repairing…" : "Installing…";
+            Description.Text = "This will take a moment. Keep the setup window open.";
             MainButton.IsEnabled = false;
-            MainButton.Content = "正在处理…";
-            SecondaryButton.Content = "取消";
+            MainButton.Content = "Working…";
+            SecondaryButton.Content = "Cancel";
             start.Set();
         }
 
@@ -124,13 +124,13 @@ namespace Operit.Installer
             if (!running && !finished && installed && Operation == SetupOperation.Repair)
             {
                 Operation = SetupOperation.Remove;
-                Heading.Text = "卸载 Operit2";
-                Description.Text = "移除应用，保留你的聊天记录和个人设置。";
-                MainButton.Content = "确认卸载";
-                SecondaryButton.Content = "取消";
+                Heading.Text = "Uninstall Operit2";
+                Description.Text = "Remove the app and keep your chats and personal settings.";
+                MainButton.Content = "Uninstall";
+                SecondaryButton.Content = "Cancel";
                 DeleteUserData.Visibility = Visibility.Visible;
                 CleanupDetailsButton.Visibility = Visibility.Visible;
-                InstallHint.Text = "默认保留数据。勾选后会删除聊天、设置、插件、工作区和密钥，\n并影响本机共用这些数据的其他副本。\n开始后会自动退出此安装位置的 Operit2。";
+                InstallHint.Text = "Data is kept by default. Selecting this deletes chats, settings, plugins, workspaces, and keys,\nand affects other copies on this PC that share the data.\nWhen it starts, Operit2 at this location is closed automatically.";
                 return;
             }
             Close();
@@ -140,14 +140,14 @@ namespace Operit.Installer
         private void CleanupChoiceChanged(object sender, RoutedEventArgs args)
         {
             Description.Text = DeleteUserData.IsChecked == true
-                ? "移除应用，并永久清理本机共用的用户数据。" : "移除应用，保留你的聊天记录和个人设置。";
+                ? "Remove the app and permanently clean up local shared user data." : "Remove the app and keep your chats and personal settings.";
         }
 
         /// <summary>Displays configured roots without changing or deleting any data.</summary>
         private void ShowCleanupDetails(object sender, RoutedEventArgs args)
         {
-            try { MessageBox.Show(this, new UserDataCleanup(InstallFolder).CreatePlan().Describe(), "用户数据清理范围"); }
-            catch (Exception error) { MessageBox.Show(this, error.Message, "无法确定清理范围"); }
+            try { MessageBox.Show(this, new UserDataCleanup(InstallFolder).CreatePlan().Describe(), "User data cleanup scope"); }
+            catch (Exception error) { MessageBox.Show(this, error.Message, "Cannot determine cleanup scope"); }
         }
 
         /// <summary>Turns an in-progress close into an MSI cancellation request.</summary>
@@ -157,7 +157,7 @@ namespace Operit.Installer
             e.Cancel = true;
             if (finalizing) return;
             CancelRequested = true;
-            ProgressText.Text = "正在取消，请稍候…";
+            ProgressText.Text = "Canceling, please wait…";
             SecondaryButton.IsEnabled = false;
             CloseButton.IsEnabled = false;
         }
@@ -168,7 +168,7 @@ namespace Operit.Installer
             finalizing = true;
             SecondaryButton.IsEnabled = false;
             CloseButton.IsEnabled = false;
-            SecondaryButton.Content = "正在完成…";
+            SecondaryButton.Content = "Finishing…";
         }
 
         /// <summary>Opens the system folder picker so the install directory is chosen, not typed.</summary>
@@ -177,7 +177,7 @@ namespace Operit.Installer
             if (Operation != SetupOperation.Install) return;
             using (var dialog = new WinForms.FolderBrowserDialog
             {
-                Description = "选择 Operit2 的安装文件夹",
+                Description = "Choose the Operit2 install folder",
                 SelectedPath = LocationText.Text
             })
             {
@@ -223,7 +223,7 @@ namespace Operit.Installer
         public void ShowFailure()
         {
             ExpandDiagnostics();
-            Description.Text = "正在停止安装，请稍候…";
+            Description.Text = "Stopping the install, please wait…";
         }
 
         /// <summary>Shows a short explanation and keeps raw diagnostics in a collapsed details section.</summary>
@@ -263,7 +263,7 @@ namespace Operit.Installer
         {
             var report = new Window
             {
-                Title = "Operit2 安装日志与诊断", Owner = this, Width = Math.Min(850, SystemParameters.WorkArea.Width - 40),
+                Title = "Operit2 setup log and diagnostics", Owner = this, Width = Math.Min(850, SystemParameters.WorkArea.Width - 40),
                 Height = Math.Min(680, SystemParameters.WorkArea.Height - 40), WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Content = new TextBox
                 {
@@ -281,10 +281,10 @@ namespace Operit.Installer
             try
             {
                 Clipboard.SetText(diagnostics.Describe());
-                if (finished) MainButton.Content = "已复制错误信息";
-                else CopyDetailsButton.Content = "已复制错误信息";
+                if (finished) MainButton.Content = "Error details copied";
+                else CopyDetailsButton.Content = "Error details copied";
             }
-            catch (Exception error) { MessageBox.Show(this, "无法复制到剪贴板：" + error.Message + "\n可选中详情文本后按 Ctrl+C，或打开诊断日志。", "复制失败"); }
+            catch (Exception error) { MessageBox.Show(this, "Cannot copy to the clipboard: " + error.Message + "\nSelect the details and press Ctrl+C, or open the diagnostic log.", "Copy failed"); }
         }
 
         /// <summary>Opens the diagnostic file in the system-associated viewer.</summary>
@@ -300,7 +300,7 @@ namespace Operit.Installer
         private void OpenDiagnosticPath(string path)
         {
             try { Process.Start(new ProcessStartInfo(path) { UseShellExecute = true }); }
-            catch (Exception error) { MessageBox.Show(this, "无法打开：" + path + "\n" + error.Message + "\n可以复制此路径到文件资源管理器中查看。", "无法打开日志", MessageBoxButton.OK, MessageBoxImage.Error); }
+            catch (Exception error) { MessageBox.Show(this, "Cannot open: " + path + "\n" + error.Message + "\nYou can paste this path into File Explorer to view it.", "Cannot open log", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         /// <summary>Shows a success, cancellation, or error result after the transaction ends.</summary>
@@ -314,17 +314,17 @@ namespace Operit.Installer
             ResultText.Visibility = Visibility.Visible;
             MainButton.IsEnabled = true;
             SecondaryButton.IsEnabled = true;
-            SecondaryButton.Content = "完成";
+            SecondaryButton.Content = "Done";
             if (success)
             {
-                Heading.Text = Operation == SetupOperation.Remove ? "卸载完成"
-                    : Operation == SetupOperation.Update ? "更新完成" : "一切就绪";
-                Description.Text = Operation == SetupOperation.Remove ? "期待与你再次相见。" : "你的 AI 工作空间，已准备就绪。";
+                Heading.Text = Operation == SetupOperation.Remove ? "Uninstall complete"
+                    : Operation == SetupOperation.Update ? "Update complete" : "All set";
+                Description.Text = Operation == SetupOperation.Remove ? "See you again soon." : "Your AI workspace is ready.";
                 ResultText.Text = Operation == SetupOperation.Remove
-                    ? DeleteData ? "本机用户数据和 Operit2 凭据已删除。其他设备与云端的数据未被修改。" : "聊天记录和个人设置已保留。"
-                    : Operation == SetupOperation.Update ? "Operit2 已更新到新版本。\n你的聊天记录和个人设置已保留。"
-                    : "你可以从桌面或开始菜单打开 Operit2。\n\n让下一个想法，从这里开始。";
-                MainButton.Content = Operation == SetupOperation.Remove ? "完成" : "打开 Operit2";
+                    ? DeleteData ? "Local user data and Operit2 credentials were deleted. Data on other devices and in the cloud was not modified." : "Your chats and personal settings were preserved."
+                    : Operation == SetupOperation.Update ? "Operit2 was updated to the new version.\nYour chats and personal settings were preserved."
+                    : "Open Operit2 from the desktop or Start menu.\n\nLet the next idea start here.";
+                MainButton.Content = Operation == SetupOperation.Remove ? "Done" : "Open Operit2";
             }
             else
             {
@@ -332,14 +332,14 @@ namespace Operit.Installer
                 ExpandDiagnostics();
                 if (canceled)
                 {
-                    Heading.Text = "操作已取消";
+                    Heading.Text = "Operation canceled";
                     FailurePanel.Visibility = Visibility.Collapsed;
                 }
-                Description.Text = canceled ? "安装程序已停止本次操作。" : "请按下面的提示处理。";
+                Description.Text = canceled ? "Setup stopped this operation." : "Follow the steps below.";
                 Description.Visibility = canceled ? Visibility.Visible : Visibility.Collapsed;
-                MainButton.Content = canceled ? "关闭" : "复制错误信息";
+                MainButton.Content = canceled ? "Close" : "Copy error details";
                 CopyDetailsButton.Visibility = Visibility.Collapsed;
-                SecondaryButton.Content = "关闭";
+                SecondaryButton.Content = "Close";
                 SecondaryButton.Visibility = canceled ? Visibility.Collapsed : Visibility.Visible;
             }
         }

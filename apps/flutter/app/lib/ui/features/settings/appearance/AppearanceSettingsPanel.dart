@@ -1145,7 +1145,6 @@ class _AppearanceHeaderBar extends StatelessWidget {
 
 class _ResponsivePreviewSplitTabView extends StatefulWidget {
   const _ResponsivePreviewSplitTabView({
-    super.key,
     required this.storageId,
     required this.previewCard,
     required this.children,
@@ -4285,7 +4284,6 @@ class _ValueSlider extends StatelessWidget {
     required this.max,
     required this.divisions,
     required this.onChanged,
-    this.valueText,
   });
 
   final String label;
