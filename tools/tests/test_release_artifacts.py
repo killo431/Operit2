@@ -334,6 +334,18 @@ class ReleaseArtifactTests(unittest.TestCase):
         self.assertLess(workflow.index(create_environment), workflow.index(build_app))
         self.assertIn('${OPERIT_REPO_ROOT}/.venv/Scripts/python.exe', cmake)
 
+    def test_windows_app_workflow_installs_typescript_for_plugin_sync(self):
+        workflow = (REPO_ROOT / ".github/workflows/windows-release-build.yml").read_text(encoding="utf-8")
+        install_typescript = (
+            "      - name: Install TypeScript for plugin synchronization\n"
+            "        if: inputs.products != 'cli'\n"
+            "        shell: pwsh\n"
+            "        run: npm install --prefix .ci-tools/typescript --no-audit --no-fund typescript@5.9.3"
+        )
+        build_app = "run: python tools/build_scripts/build_flutter_windows.py --enforce-lockfile"
+        self.assertIn(install_typescript, workflow)
+        self.assertLess(workflow.index(install_typescript), workflow.index(build_app))
+
 
 if __name__ == "__main__":
     unittest.main()
