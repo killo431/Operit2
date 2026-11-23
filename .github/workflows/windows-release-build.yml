@@ -49,6 +49,11 @@ jobs:
         with:
           node-version: 24
 
+      - name: Install TypeScript for plugin synchronization
+        if: inputs.products != 'cli'
+        shell: pwsh
+        run: npm install --prefix .ci-tools/typescript --no-audit --no-fund typescript@5.9.3
+
       - name: Install FVM
         shell: pwsh
         run: |
