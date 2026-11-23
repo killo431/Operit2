@@ -76,6 +76,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Create Python environment for Windows native build
+        if: inputs.products != 'cli'
+        shell: pwsh
+        run: python -m venv .venv
+
       - name: Build and package Windows app
         if: inputs.products != 'cli'
         shell: pwsh
