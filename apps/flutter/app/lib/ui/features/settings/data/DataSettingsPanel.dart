@@ -15,7 +15,6 @@ import '../../../../core/bridge/PlatformCoreProxy.dart';
 import '../../../../core/logging/ClientLogger.dart';
 import '../../../../core/logging/DiagnosticLogExporter.dart';
 import '../../../../core/host/FileSaveService.dart';
-import '../../../../core/host/SelectedFileInput.dart' show SelectedFileInput;
 import '../../../../core/proxy/generated/CoreProxyClients.g.dart';
 import '../../../../core/proxy/generated/CoreProxyModels.g.dart';
 import '../../../../core/runtime/RuntimeBootstrapManager.dart';
@@ -259,8 +258,9 @@ class _DataSettingsPanelState extends State<DataSettingsPanel> {
             name: suggestedName,
             acceptedTypeGroups: const <XTypeGroup>[_rawSnapshotFileTypeGroup],
           );
-          if (savedPath != null && mounted)
+          if (savedPath != null && mounted) {
             _showMessage(l10n.savedTo(savedPath));
+          }
         } finally {
           final file = exported;
           if (file != null) {
@@ -575,10 +575,11 @@ class _DataSettingsPanelState extends State<DataSettingsPanel> {
       final (added, updated, skipped) = chat
           ? await _importChatJson(jsonText)
           : await _importModelJson(jsonText);
-      if (mounted)
+      if (mounted) {
         _showMessage(
           l10n.settingsDataBackupImportResult(added, updated, skipped),
         );
+      }
     });
   }
 

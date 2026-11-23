@@ -320,8 +320,9 @@ extension _ComposeNavigationNodes on _ComposeProgramExecutorState {
         contentColor: contentColor,
         onSelected: (index) {
           final tab = tabNodes[index];
-          if (tab.props['enabled'] != false)
+          if (tab.props['enabled'] != false) {
             _invokeAction(tab.props['onClick']);
+          }
         },
         tabs: [
           for (var index = 0; index < tabNodes.length; index++)

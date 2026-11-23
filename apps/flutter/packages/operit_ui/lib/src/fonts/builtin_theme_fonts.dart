@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/services.dart';
@@ -45,8 +44,9 @@ class BuiltinThemeFonts implements ThemeAssetResolver {
               ),
             )
             as Map<String, dynamic>;
-    if (json['formatVersion'] != 1)
+    if (json['formatVersion'] != 1) {
       throw FormatException('Unknown builtin font catalog');
+    }
     final entries = <String, BuiltinThemeFont>{};
     for (final raw in json['fonts'] as List<dynamic>) {
       final row = raw as Map<String, dynamic>;
@@ -54,8 +54,9 @@ class BuiltinThemeFonts implements ThemeAssetResolver {
       if (id != kNotoSansScFontId && id != kCascadiaMonoFontId) {
         throw FormatException('Unknown builtin font ID: $id');
       }
-      if (entries.containsKey(id))
+      if (entries.containsKey(id)) {
         throw FormatException('Duplicate builtin font ID');
+      }
       final digest = row['sha256'] as String;
       final licenseDigest = row['licenseSha256'] as String;
       themeFontFamilyForSha256(digest);
@@ -78,15 +79,17 @@ class BuiltinThemeFonts implements ThemeAssetResolver {
         source: row['source'] as String,
       );
     }
-    if (entries.length != 2)
+    if (entries.length != 2) {
       throw FormatException('Both pinned builtin fonts are required');
+    }
     return BuiltinThemeFonts._(bundle, Map.unmodifiable(entries));
   }
 
   BuiltinThemeFont declaration(String id) {
     final entry = _entries[id];
-    if (entry == null)
+    if (entry == null) {
       throw ArgumentError('Builtin font is not registered: $id');
+    }
     return entry;
   }
 

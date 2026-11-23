@@ -14,6 +14,8 @@ analyzer:
     # is used correctly (public classes in lib/src/) but our analyzer version
     # is stricter than the upstream package's.
     invalid_internal_annotation: ignore
+  exclude:
+    - build/**
 include: package:flutter_lints/flutter.yaml
 
 linter:

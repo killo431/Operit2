@@ -38,7 +38,6 @@ import 'WorkspaceTabStrip.dart';
 import 'WorkspaceTopBarButton.dart';
 import 'browser/WorkspaceBrowserViewStore.dart';
 import 'browser/automation/WorkspaceWebVisitSessionRegistry.dart';
-import 'browser/tabs/WorkspaceBrowserTabModels.dart';
 import 'file_preview/WorkspaceTextCloseDialog.dart';
 import 'terminal/WorkspaceTerminalSessions.dart';
 import 'terminal/WorkspaceTerminalLaunch.dart';
@@ -2195,8 +2194,9 @@ class _WorkspacePanelState extends State<WorkspacePanel> {
       final openers = await _fileOpeners(tab.absolutePath ?? path, path);
       if (!mounted ||
           !_containsWorkspaceTab(tab) ||
-          chatId != widget.currentChatId)
+          chatId != widget.currentChatId) {
         return;
+      }
       final current = tab.pluginPresentation?.identity;
       final selected = await showDialog<int>(
         context: context,
@@ -2231,13 +2231,15 @@ class _WorkspacePanelState extends State<WorkspacePanel> {
       if (!mounted ||
           selected == null ||
           chatId != widget.currentChatId ||
-          !_containsWorkspaceTab(tab))
+          !_containsWorkspaceTab(tab)) {
         return;
+      }
       final opener = selected == 0 ? null : openers[selected - 1];
       if (opener?.identity == current) return;
       if (_session.dirtyPluginFiles.contains(tab) &&
-          (!await _confirmDiscardPluginFile() || !mounted))
+          (!await _confirmDiscardPluginFile() || !mounted)) {
         return;
+      }
       var document = tab.textDocument;
       if (opener != null &&
           document != null &&
@@ -2271,10 +2273,11 @@ class _WorkspacePanelState extends State<WorkspacePanel> {
         _setSelectedIndexForPane(pane, index);
       });
     } catch (error) {
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.maybeOf(
           context,
         )?.showSnackBar(SnackBar(content: Text('$error')));
+      }
     }
   }
 

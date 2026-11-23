@@ -2,6 +2,12 @@
 
 This directory contains the Operit2 plugin workspace.
 
+The workspace `package.json` explicitly selects CommonJS, matching the plugin
+runtime and keeping Node16 TypeScript builds independent of any `package.json`
+above the checkout. Packages with their own module configuration retain it.
+Host and browser type checks should explicitly select their runtime declarations
+instead of automatically importing unrelated ancestor `node_modules/@types`.
+
 Current packages explicitly declare `"api_version": "2.0.0"`: in `manifest.json`
 for ToolPkg and in the `METADATA` root object for standalone scripts. Packages
 that omit the field use the `1.0.0` compatibility contract. ToolPkg subpackages

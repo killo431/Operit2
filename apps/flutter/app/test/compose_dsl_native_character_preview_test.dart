@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -21,8 +20,9 @@ Map<String, dynamic> _fixture(String name) {
   void visit(Map<String, dynamic> node) {
     if (node['type'] == 'Image') {
       final props = node['props'] as Map<String, dynamic>;
-      if (props['path'] != null)
+      if (props['path'] != null) {
         props['path'] = '/operitapp/preview/operit-avatar.png';
+      }
     }
     for (final child in node['children'] as List) {
       visit(child as Map<String, dynamic>);

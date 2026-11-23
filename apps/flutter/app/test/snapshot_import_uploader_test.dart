@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:operit_folder_access/operit_folder_access.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:operit2/core/host/SelectedFileInput.dart';
 
 const _uploadChunkBytes = 1024 * 1024;
 

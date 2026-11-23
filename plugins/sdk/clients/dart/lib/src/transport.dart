@@ -312,8 +312,9 @@ final class PluginSdkIpcConnection {
 
   /// Reads a protocol map without coercing unknown payloads.
   Map<String, Object?> _map(Object? value) {
-    if (value is! Map)
+    if (value is! Map) {
       throw const PluginSdkError('INVALID_FRAME', 'IPC body is not a map');
+    }
     return value.map((key, item) => MapEntry(key.toString(), item));
   }
 

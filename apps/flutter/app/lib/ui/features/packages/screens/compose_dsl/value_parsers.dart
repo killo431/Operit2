@@ -255,8 +255,9 @@ TextStyle? _textFieldStyle(BuildContext context, Object? raw) {
   if (raw is! Map) {
     return null;
   }
-  if (raw['inheritStyle'] == true)
+  if (raw['inheritStyle'] == true) {
     return _inlineTextStyle(context, _stringMap(raw));
+  }
   final style = Theme.of(context).textTheme.bodyMedium!;
   return _scaledTextStyle(style, _number(raw['fontSize'])).copyWith(
     color: _color(context, raw['color']),

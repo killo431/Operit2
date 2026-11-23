@@ -17,7 +17,7 @@ void main() {
       expect(lightColorScheme.primaryContainer, Color(lightScheme.primaryContainer));
       expect(lightColorScheme.onPrimaryContainer, Color(lightScheme.onPrimaryContainer));
       expect(lightColorScheme.surface, Color(lightScheme.surface));
-      expect(lightColorScheme.surfaceVariant, Color(lightScheme.surfaceVariant));
+      expect(lightColorScheme.surfaceContainerHighest, Color(lightScheme.surfaceVariant));
       expect(lightColorScheme.surfaceTint, Color(lightScheme.primary));
 
       final darkColorScheme = corePalette.toColorScheme(
@@ -29,7 +29,7 @@ void main() {
       expect(darkColorScheme.primaryContainer, Color(darkScheme.primaryContainer));
       expect(darkColorScheme.onPrimaryContainer, Color(darkScheme.onPrimaryContainer));
       expect(darkColorScheme.surface, Color(darkScheme.surface));
-      expect(darkColorScheme.surfaceVariant, Color(darkScheme.surfaceVariant));
+      expect(darkColorScheme.surfaceContainerHighest, Color(darkScheme.surfaceVariant));
       expect(darkColorScheme.surfaceTint, Color(darkScheme.primary));
     });
 

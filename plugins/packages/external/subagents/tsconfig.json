@@ -6,6 +6,7 @@
     "rootDir": "src",
     "outDir": "dist",
     "lib": ["es2020"],
+    "types": [],
     "strict": true,
     "noImplicitReturns": true,
     "skipLibCheck": true,

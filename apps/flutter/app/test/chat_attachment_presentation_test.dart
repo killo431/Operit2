@@ -745,8 +745,8 @@ void _updateBubbleAppearance(
         'bubbleUserContentPaddingLeft': padding,
         'bubbleUserContentPaddingRight': padding,
       },
-      if (avatar != null) 'bubbleShowAvatar': avatar,
-      if (wide != null) 'bubbleWideLayoutEnabled': wide,
+      'bubbleShowAvatar': ?avatar,
+      'bubbleWideLayoutEnabled': ?wide,
     }),
   );
   controller.previewThemeSettings();

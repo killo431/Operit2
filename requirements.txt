@@ -1,0 +1,124 @@
+# cv2: ambiguous - could be opencv-python, opencv-python-headless
+# Could not map: build_flutter_android
+# Could not map: release_artifacts
+# Could not map: lldb
+# Could not map: generate_guest_traces
+# Could not map: compact_guest_aot_profile
+# Could not map: pyatspi
+# Could not map: cairo
+# Could not map: cargo_build
+# Could not map: models_dev_bundle
+# Could not map: prepare
+# Could not map: build_flutter_ohos
+# Could not map: prepare_ios_v8
+# Could not map: build_android_module_release
+# Could not map: prepare_android_v8
+# Could not map: build_cli_linux_debian12
+# Could not map: gh_publish
+# Could not map: download_action_artifacts
+# Could not map: build_flutter_ios
+# Could not map: window_surface
+# Could not map: build_apple_release
+# Could not map: build_flutter_macos
+# Could not map: build_local
+# Could not map: macos_distribution
+# Could not map: sign_macos
+# Could not map: cli_common
+# Could not map: publish_dist
+# Could not map: windows_bash
+# Could not map: build_windows_msi
+# Could not map: windows_powershell
+# Could not map: qualcomm_device_cloud_sdk
+# Could not map: appium
+# Could not map: conans
+# Could not map: sherpa_mnn
+# Could not map: _sherpa_mnn
+# Could not map: _mnncengine
+# Could not map: _tools
+# Could not map: cppcheckdata
+# Could not map: SocketServer
+accelerate
+aliyun
+archive
+caffe
+cffi
+click
+common
+cuda
+datasets
+diffusers
+distutils
+filelock
+flatbuffers
+fonttools
+gguf
+gi
+gitpython
+huggingface-hub
+imageio-ffmpeg
+incremental
+jinja2
+jiwer
+librosa
+liquid_audio
+lm_eval
+matplotlib
+mistral_common
+MNN
+mnncompress
+MNNCV
+modelscope
+MyGame
+numpy
+onnx
+onnx_graphsurgeon
+onnx_pytorch
+onnx_tf
+onnxruntime
+onnxslim
+openai
+openmind_hub
+packaging
+pandas
+patch
+peft
+pillow
+polygraphy
+prettytable
+pypdf
+pypdfium2
+pypinyin
+pyserial
+PySide6
+pytest
+pyyaml
+rapidfuzz
+recommonmark
+reportlab
+requests
+sacrebleu
+safetensors
+scipy
+seaborn
+sentence_transformers
+sentencepiece
+setuptools
+sounddevice
+soundfile
+sphinx-rtd-theme
+tabulate
+tensorflow
+tensorly
+thefuzz
+tokenizers
+torch
+torchvision
+tqdm
+transformers
+tvm
+typer
+utils
+websockets
+wget
+wheel
+yaspin

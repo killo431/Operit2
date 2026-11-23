@@ -1,6 +1,5 @@
 // ignore_for_file: file_names
 
-import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../../../../../l10n/generated/app_localizations.dart';

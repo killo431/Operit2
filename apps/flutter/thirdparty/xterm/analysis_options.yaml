@@ -1,3 +1,6 @@
+analyzer:
+  exclude:
+    - build/**
 linter:
   rules:
     prefer_function_declarations_over_variables: false

@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../WorkspaceBrowserViewStore.dart';
-import '../tabs/WorkspaceBrowserTabModels.dart';
 
 class WorkspaceBrowserCompositorSurface extends StatefulWidget {
   /// Creates a workspace view over the owner WebView composition surface.

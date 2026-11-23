@@ -120,9 +120,9 @@ class _SummaryMessageComposableState extends State<SummaryMessageComposable>
     final outputStr = formatCompactTokenCount(widget.message.outputTokens);
 
     if (hasTiming && hasTokens) {
-      return '${l10n.historyDialogSummary} · 用时 ${durationSeconds}秒 输入$inputStr 输出$outputStr';
+      return '${l10n.historyDialogSummary} · 用时 $durationSeconds秒 输入$inputStr 输出$outputStr';
     } else if (hasTiming) {
-      return '${l10n.historyDialogSummary} · 用时 ${durationSeconds}秒';
+      return '${l10n.historyDialogSummary} · 用时 $durationSeconds秒';
     } else if (hasTokens) {
       return '${l10n.historyDialogSummary} · 输入$inputStr 输出$outputStr';
     }

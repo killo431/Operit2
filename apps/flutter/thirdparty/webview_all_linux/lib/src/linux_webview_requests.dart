@@ -62,12 +62,12 @@ class LinuxPlatformWebViewPermissionRequest
 
 class LinuxPlatformSslAuthError extends PlatformSslAuthError {
   LinuxPlatformSslAuthError({
-    required String description,
+    required super.description,
     required Future<void> Function() onProceed,
     required Future<void> Function() onCancel,
   }) : _onProceed = onProceed,
        _onCancel = onCancel,
-       super(certificate: null, description: description);
+       super(certificate: null);
 
   final Future<void> Function() _onProceed;
   final Future<void> Function() _onCancel;
@@ -93,7 +93,7 @@ class LinuxPlatformSslAuthError extends PlatformSslAuthError {
 }
 
 class LinuxWebResourceError extends WebResourceError {
-  LinuxWebResourceError({
+  const LinuxWebResourceError({
     required super.errorCode,
     required super.description,
     required super.errorType,

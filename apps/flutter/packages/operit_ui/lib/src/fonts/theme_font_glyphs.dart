@@ -23,8 +23,9 @@ class ThemeFontGlyphs {
       final offset = _u32(record + 8);
       final length = _u32(record + 12);
       _range(offset, length, _data.lengthInBytes);
-      if (tables.containsKey(tag))
+      if (tables.containsKey(tag)) {
         throw FormatException('Duplicate font table: $tag');
+      }
       tables[tag] = (offset, length);
     }
     const unsupported = <String>{
@@ -57,8 +58,9 @@ class ThemeFontGlyphs {
       'glyf',
       'cmap',
     ]) {
-      if (!tables.containsKey(tag))
+      if (!tables.containsKey(tag)) {
         throw FormatException('Missing font table: $tag');
+      }
     }
     final maxp = tables['maxp']!;
     _range(0, 6, maxp.$2);
@@ -67,8 +69,9 @@ class ThemeFontGlyphs {
     final cmap = tables['cmap']!;
     _range(0, 4, cmap.$2);
     final records = _u16(cmap.$1 + 2);
-    if (records == 0 || records > 64)
+    if (records == 0 || records > 64) {
       throw FormatException('Invalid cmap record budget');
+    }
     _range(4, records * 8, cmap.$2);
     var selectedRank = -1;
     for (var index = 0; index < records; index++) {
@@ -92,8 +95,9 @@ class ThemeFontGlyphs {
         _format = format;
       }
     }
-    if (selectedRank < 0)
+    if (selectedRank < 0) {
       throw FormatException('Unicode cmap 4 or 12 is required');
+    }
     final relative = _base - cmap.$1;
     if (_format == 12) {
       _range(relative, 16, cmap.$2);
@@ -204,8 +208,9 @@ class ThemeFontGlyphs {
 
   void requireText(String text, {required String reference}) {
     final scalars = text.runes.toSet();
-    if (scalars.length > 4096)
+    if (scalars.length > 4096) {
       throw ArgumentError('Fixture glyph budget exceeded');
+    }
     for (final scalar in scalars) {
       if (scalar == 9 || scalar == 10 || scalar == 13) continue;
       if (!hasGlyph(scalar)) {

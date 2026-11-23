@@ -184,8 +184,9 @@ Map<String, Rect> geometry(WidgetTester tester) {
       (widget) =>
           widget is InputDecorator && widget.decoration.labelText == label,
     );
-    if (match.evaluate().isNotEmpty)
+    if (match.evaluate().isNotEmpty) {
       result[label] = tester.getRect(match.first);
+    }
   }
   return result;
 }

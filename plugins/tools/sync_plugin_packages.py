@@ -156,6 +156,12 @@ def _plugin_build_environment() -> dict[str, str]:
             if directory not in paths:
                 paths.append(directory)
         environment["PATH"] = os.pathsep.join(paths)
+    elif sys.platform == "win32" and os.environ.get("ProgramFiles"):
+        llvm_bin = Path(os.environ["ProgramFiles"]) / "LLVM" / "bin"
+        paths = environment.get("PATH", os.defpath).split(os.pathsep)
+        if llvm_bin.is_dir() and str(llvm_bin) not in paths:
+            paths.append(str(llvm_bin))
+        environment["PATH"] = os.pathsep.join(paths)
     return environment
 
 
@@ -376,7 +382,7 @@ def _compute_paths_signature(base_dir: Path, paths: list[Path]) -> str:
 
 
 def _collect_prebuild_inputs(source_dir: Path, child_dir: Path) -> list[Path]:
-    paths: list[Path] = []
+    paths: list[Path] = [_plugins_root() / "package.json"]
     tsconfig = child_dir / "tsconfig.json"
     if tsconfig.is_file():
         paths.append(tsconfig)
@@ -400,7 +406,7 @@ def _collect_prebuild_inputs(source_dir: Path, child_dir: Path) -> list[Path]:
 
 
 def _collect_root_prebuild_inputs(source_dir: Path) -> list[Path]:
-    paths: list[Path] = []
+    paths: list[Path] = [_plugins_root() / "package.json"]
     tsconfig = source_dir / "tsconfig.json"
     if tsconfig.is_file():
         paths.append(tsconfig)

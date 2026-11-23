@@ -8,7 +8,7 @@ import 'theme_preference_snapshot.dart';
 /// Projects a validated template into shared renderer inputs and editable appearance defaults.
 class ThemeVisualSpecV1 {
   ThemeVisualSpecV1.fromCheckedContract(Map<String, Object?> json)
-    : _json = jsonDecode(jsonEncode(json)) as Map<String, dynamic> {}
+    : _json = jsonDecode(jsonEncode(json)) as Map<String, dynamic>;
 
   final Map<String, Object?> _json;
 

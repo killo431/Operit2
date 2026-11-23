@@ -181,13 +181,14 @@ void main() {
       final calls = <MethodCall>[];
       messenger.setMockMethodCallHandler(channel, (call) async {
         calls.add(call);
-        if (call.method == 'initialize')
+        if (call.method == 'initialize') {
           return {
             'protection': 'continuous',
             'closeToTray': true,
             'activeLeases': 0,
             'detail': 'Test',
           };
+        }
         return null;
       });
       final controller = OperitKeepAlive(channel: channel);

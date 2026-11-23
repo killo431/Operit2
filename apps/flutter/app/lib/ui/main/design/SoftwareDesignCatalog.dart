@@ -76,7 +76,7 @@ class SoftwareDesignCatalog {
             'routeId': route.routeId,
             'args': args,
             if (file.isNotEmpty) 'file': file,
-            if (widget != null) 'widget': widget,
+            'widget': ?widget,
             if (route.ownerPackageName != null)
               'package': route.ownerPackageName,
             if (route.toolPkgUiModuleId != null)

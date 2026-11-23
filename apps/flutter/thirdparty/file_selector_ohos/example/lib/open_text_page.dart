@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 import 'package:file_selector_platform_interface/file_selector_platform_interface.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Screen that allows the user to select a text file using `openFile`, then
 /// displays its contents in a dialog.

@@ -3101,8 +3101,9 @@ class _ToolPkgDslTestBridge extends OperitRuntimeBridge {
   /// Attaches the current generated reverse command stream to its fixture session.
   @override
   Future<CorePushSink> push(CorePushRequest request) async {
-    if (request.methodName != 'submit')
+    if (request.methodName != 'submit') {
       throw StateError('unexpected push: ${request.methodName}');
+    }
     return _DslCommandSink(
       this,
       _sessions[(request.args as Map)['sessionId']]!,
@@ -3135,10 +3136,11 @@ class _ToolPkgDslTestBridge extends OperitRuntimeBridge {
       String encoded;
       if (command.operation == 'render') {
         final pending = renderCompletion;
-        if (pending != null)
+        if (pending != null) {
           encoded = await pending.future;
-        else
+        } else {
           encoded = _renderResult(_count);
+        }
       } else if (command.operation == 'action') {
         onAction?.call(args);
         if (command.actionId == 'increment') _count++;
@@ -3241,8 +3243,9 @@ class _ToolPkgDslTestBridge extends OperitRuntimeBridge {
   /// Exposes the sole typed downstream session stream through the existing Core watch protocol.
   @override
   Stream<CoreEvent> watchStream(CoreWatchRequest request) {
-    if (request.propertyName != 'updates')
+    if (request.propertyName != 'updates') {
       throw StateError('unexpected watch: ${request.propertyName}');
+    }
     final session = _sessions[(request.args as Map)['sessionId']]!;
     session.target = request.target;
     final error = attachmentError;

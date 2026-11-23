@@ -143,6 +143,21 @@ class PluginPackageSyncTests(unittest.TestCase):
             with self.subTest(platform=platform), patch.object(SYNC.sys, "platform", platform), patch.dict(os.environ, {"PATH": "/custom/tools", "BUILD_FLAG": "1"}, clear=True):
                 self.assertEqual(SYNC._plugin_build_environment(), dict(os.environ))
 
+    def test_windows_prebuild_finds_installed_llvm_without_overriding_caller_tools(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            program_files = Path(temporary)
+            llvm_bin = program_files / "LLVM" / "bin"
+            llvm_bin.mkdir(parents=True)
+            caller_path = str(program_files / "custom-tools")
+            with patch.object(SYNC.sys, "platform", "win32"), patch.dict(
+                os.environ, {"PATH": caller_path, "ProgramFiles": str(program_files)}, clear=True,
+            ):
+                environment = SYNC._plugin_build_environment()
+                self.assertEqual(environment["PATH"].split(os.pathsep), [caller_path, str(llvm_bin)])
+                self.assertEqual(os.environ["PATH"], caller_path)
+                with patch.dict(os.environ, {"PATH": environment["PATH"]}):
+                    self.assertEqual(SYNC._plugin_build_environment()["PATH"], environment["PATH"])
+
     def test_repacking_ignores_timestamps_and_permissions_but_keeps_content_changes(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

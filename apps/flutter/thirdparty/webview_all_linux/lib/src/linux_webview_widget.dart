@@ -735,7 +735,7 @@ class _LinuxGeometryRenderBox extends RenderProxyBox {
     return MatrixUtils.transformRect(transform, rect);
   }
 
-  /** Names the widget behind an offending render object when a creator exists. */
+  /// Names the widget behind an offending render object when a creator exists.
   String _describeRenderObject(RenderObject object) {
     final detail = object is RenderClipRRect
         ? ' radius=${object.borderRadius}'
@@ -754,7 +754,7 @@ class _LinuxGeometryRenderBox extends RenderProxyBox {
     return '${object.runtimeType}$detail ancestors: ${chain.join(' < ')}';
   }
 
-  /** Reports shaped or rotated clips that fall back to axis-aligned bounds. */
+  /// Reports shaped or rotated clips that fall back to axis-aligned bounds.
   void _reportApproximatedClip() {
     if (_reportedApproximatedClip) {
       return;

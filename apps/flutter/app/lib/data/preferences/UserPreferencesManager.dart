@@ -385,8 +385,9 @@ class UserPreferencesManager {
     final removeKeys = <String>[];
     for (final entry in updates.entries) {
       final key = _appearancePreferenceKeys[entry.key];
-      if (key == null)
+      if (key == null) {
         throw ArgumentError('Unknown appearance field: ${entry.key}');
+      }
       if (entry.value == null) {
         removeKeys.add(key);
       } else {
@@ -489,135 +490,89 @@ class UserPreferencesManager {
           customSecondaryColor != null)
         'themePaletteJson': null,
       if (themeMode != null) 'themeMode': themeMode.name,
-      if (useCustomColors != null) 'useCustomColors': useCustomColors,
-      if (customPrimaryColor != null) 'customPrimaryColor': customPrimaryColor,
-      if (customSecondaryColor != null)
-        'customSecondaryColor': customSecondaryColor,
-      if (useBackgroundImage != null) 'useBackgroundImage': useBackgroundImage,
-      if (backgroundImageUri != null) 'backgroundImageUri': backgroundImageUri,
-      if (backgroundImageOpacity != null)
-        'backgroundImageOpacity': backgroundImageOpacity,
-      if (backgroundMediaType != null)
-        'backgroundMediaType': backgroundMediaType,
-      if (videoBackgroundMuted != null)
-        'videoBackgroundMuted': videoBackgroundMuted,
-      if (videoBackgroundLoop != null)
-        'videoBackgroundLoop': videoBackgroundLoop,
-      if (useBackgroundBlur != null) 'useBackgroundBlur': useBackgroundBlur,
-      if (backgroundBlurRadius != null)
-        'backgroundBlurRadius': backgroundBlurRadius,
-      if (transparentSurfaceEnabled != null)
-        'transparentSurfaceEnabled': transparentSurfaceEnabled,
-      if (chatInputFloating != null) 'chatInputFloating': chatInputFloating,
-      if (inputStyle != null) 'inputStyle': inputStyle,
-      if (userChatStyle != null) 'userChatStyle': userChatStyle,
-      if (aiChatStyle != null) 'aiChatStyle': aiChatStyle,
-      if (bubbleShowAvatar != null) 'bubbleShowAvatar': bubbleShowAvatar,
-      if (bubbleWideLayoutEnabled != null)
-        'bubbleWideLayoutEnabled': bubbleWideLayoutEnabled,
-      if (cursorUserBubbleColor != null)
-        'cursorUserBubbleColor': cursorUserBubbleColor,
-      if (bubbleUserBubbleColor != null)
-        'bubbleUserBubbleColor': bubbleUserBubbleColor,
-      if (bubbleAiBubbleColor != null)
-        'bubbleAiBubbleColor': bubbleAiBubbleColor,
-      if (bubbleUserTextColor != null)
-        'bubbleUserTextColor': bubbleUserTextColor,
-      if (bubbleAiTextColor != null) 'bubbleAiTextColor': bubbleAiTextColor,
-      if (bubbleUserUseImage != null) 'bubbleUserUseImage': bubbleUserUseImage,
-      if (bubbleAiUseImage != null) 'bubbleAiUseImage': bubbleAiUseImage,
-      if (bubbleUserImageUri != null) 'bubbleUserImageUri': bubbleUserImageUri,
-      if (bubbleAiImageUri != null) 'bubbleAiImageUri': bubbleAiImageUri,
-      if (bubbleUserImageRenderMode != null)
-        'bubbleUserImageRenderMode': bubbleUserImageRenderMode,
-      if (bubbleAiImageRenderMode != null)
-        'bubbleAiImageRenderMode': bubbleAiImageRenderMode,
-      if (bubbleUserImageCropLeft != null)
-        'bubbleUserImageCropLeft': bubbleUserImageCropLeft,
-      if (bubbleUserImageCropTop != null)
-        'bubbleUserImageCropTop': bubbleUserImageCropTop,
-      if (bubbleUserImageCropRight != null)
-        'bubbleUserImageCropRight': bubbleUserImageCropRight,
-      if (bubbleUserImageCropBottom != null)
-        'bubbleUserImageCropBottom': bubbleUserImageCropBottom,
-      if (bubbleUserImageRepeatStart != null)
-        'bubbleUserImageRepeatStart': bubbleUserImageRepeatStart,
-      if (bubbleUserImageRepeatEnd != null)
-        'bubbleUserImageRepeatEnd': bubbleUserImageRepeatEnd,
-      if (bubbleUserImageRepeatYStart != null)
-        'bubbleUserImageRepeatYStart': bubbleUserImageRepeatYStart,
-      if (bubbleUserImageRepeatYEnd != null)
-        'bubbleUserImageRepeatYEnd': bubbleUserImageRepeatYEnd,
-      if (bubbleUserImageScale != null)
-        'bubbleUserImageScale': bubbleUserImageScale,
-      if (bubbleAiImageCropLeft != null)
-        'bubbleAiImageCropLeft': bubbleAiImageCropLeft,
-      if (bubbleAiImageCropTop != null)
-        'bubbleAiImageCropTop': bubbleAiImageCropTop,
-      if (bubbleAiImageCropRight != null)
-        'bubbleAiImageCropRight': bubbleAiImageCropRight,
-      if (bubbleAiImageCropBottom != null)
-        'bubbleAiImageCropBottom': bubbleAiImageCropBottom,
-      if (bubbleAiImageRepeatStart != null)
-        'bubbleAiImageRepeatStart': bubbleAiImageRepeatStart,
-      if (bubbleAiImageRepeatEnd != null)
-        'bubbleAiImageRepeatEnd': bubbleAiImageRepeatEnd,
-      if (bubbleAiImageRepeatYStart != null)
-        'bubbleAiImageRepeatYStart': bubbleAiImageRepeatYStart,
-      if (bubbleAiImageRepeatYEnd != null)
-        'bubbleAiImageRepeatYEnd': bubbleAiImageRepeatYEnd,
-      if (bubbleAiImageScale != null) 'bubbleAiImageScale': bubbleAiImageScale,
-      if (bubbleUserRoundedCornersEnabled != null)
-        'bubbleUserRoundedCornersEnabled': bubbleUserRoundedCornersEnabled,
-      if (bubbleAiRoundedCornersEnabled != null)
-        'bubbleAiRoundedCornersEnabled': bubbleAiRoundedCornersEnabled,
-      if (bubbleUserContentPaddingLeft != null)
-        'bubbleUserContentPaddingLeft': bubbleUserContentPaddingLeft,
-      if (bubbleUserContentPaddingRight != null)
-        'bubbleUserContentPaddingRight': bubbleUserContentPaddingRight,
-      if (bubbleAiContentPaddingLeft != null)
-        'bubbleAiContentPaddingLeft': bubbleAiContentPaddingLeft,
-      if (bubbleAiContentPaddingRight != null)
-        'bubbleAiContentPaddingRight': bubbleAiContentPaddingRight,
-      if (showThinkingProcess != null)
-        'showThinkingProcess': showThinkingProcess,
-      if (showModelProvider != null) 'showModelProvider': showModelProvider,
-      if (showModelName != null) 'showModelName': showModelName,
-      if (showRoleName != null) 'showRoleName': showRoleName,
-      if (showUserName != null) 'showUserName': showUserName,
-      if (showMessageTokenStats != null)
-        'showMessageTokenStats': showMessageTokenStats,
-      if (showMessageTimingStats != null)
-        'showMessageTimingStats': showMessageTimingStats,
-      if (showMessageTimestamp != null)
-        'showMessageTimestamp': showMessageTimestamp,
-      if (avatarShape != null) 'avatarShape': avatarShape,
-      if (avatarCornerRadius != null) 'avatarCornerRadius': avatarCornerRadius,
-      if (showInputProcessingStatus != null)
-        'showInputProcessingStatus': showInputProcessingStatus,
-      if (useCustomFont != null) 'useCustomFont': useCustomFont,
-      if (fontType != null) 'fontType': fontType,
-      if (systemFontName != null) 'systemFontName': systemFontName,
-      if (customFontPath != null) 'customFontPath': customFontPath,
-      if (fontScale != null) 'fontScale': fontScale,
+      'useCustomColors': ?useCustomColors,
+      'customPrimaryColor': ?customPrimaryColor,
+      'customSecondaryColor': ?customSecondaryColor,
+      'useBackgroundImage': ?useBackgroundImage,
+      'backgroundImageUri': ?backgroundImageUri,
+      'backgroundImageOpacity': ?backgroundImageOpacity,
+      'backgroundMediaType': ?backgroundMediaType,
+      'videoBackgroundMuted': ?videoBackgroundMuted,
+      'videoBackgroundLoop': ?videoBackgroundLoop,
+      'useBackgroundBlur': ?useBackgroundBlur,
+      'backgroundBlurRadius': ?backgroundBlurRadius,
+      'transparentSurfaceEnabled': ?transparentSurfaceEnabled,
+      'chatInputFloating': ?chatInputFloating,
+      'inputStyle': ?inputStyle,
+      'userChatStyle': ?userChatStyle,
+      'aiChatStyle': ?aiChatStyle,
+      'bubbleShowAvatar': ?bubbleShowAvatar,
+      'bubbleWideLayoutEnabled': ?bubbleWideLayoutEnabled,
+      'cursorUserBubbleColor': ?cursorUserBubbleColor,
+      'bubbleUserBubbleColor': ?bubbleUserBubbleColor,
+      'bubbleAiBubbleColor': ?bubbleAiBubbleColor,
+      'bubbleUserTextColor': ?bubbleUserTextColor,
+      'bubbleAiTextColor': ?bubbleAiTextColor,
+      'bubbleUserUseImage': ?bubbleUserUseImage,
+      'bubbleAiUseImage': ?bubbleAiUseImage,
+      'bubbleUserImageUri': ?bubbleUserImageUri,
+      'bubbleAiImageUri': ?bubbleAiImageUri,
+      'bubbleUserImageRenderMode': ?bubbleUserImageRenderMode,
+      'bubbleAiImageRenderMode': ?bubbleAiImageRenderMode,
+      'bubbleUserImageCropLeft': ?bubbleUserImageCropLeft,
+      'bubbleUserImageCropTop': ?bubbleUserImageCropTop,
+      'bubbleUserImageCropRight': ?bubbleUserImageCropRight,
+      'bubbleUserImageCropBottom': ?bubbleUserImageCropBottom,
+      'bubbleUserImageRepeatStart': ?bubbleUserImageRepeatStart,
+      'bubbleUserImageRepeatEnd': ?bubbleUserImageRepeatEnd,
+      'bubbleUserImageRepeatYStart': ?bubbleUserImageRepeatYStart,
+      'bubbleUserImageRepeatYEnd': ?bubbleUserImageRepeatYEnd,
+      'bubbleUserImageScale': ?bubbleUserImageScale,
+      'bubbleAiImageCropLeft': ?bubbleAiImageCropLeft,
+      'bubbleAiImageCropTop': ?bubbleAiImageCropTop,
+      'bubbleAiImageCropRight': ?bubbleAiImageCropRight,
+      'bubbleAiImageCropBottom': ?bubbleAiImageCropBottom,
+      'bubbleAiImageRepeatStart': ?bubbleAiImageRepeatStart,
+      'bubbleAiImageRepeatEnd': ?bubbleAiImageRepeatEnd,
+      'bubbleAiImageRepeatYStart': ?bubbleAiImageRepeatYStart,
+      'bubbleAiImageRepeatYEnd': ?bubbleAiImageRepeatYEnd,
+      'bubbleAiImageScale': ?bubbleAiImageScale,
+      'bubbleUserRoundedCornersEnabled': ?bubbleUserRoundedCornersEnabled,
+      'bubbleAiRoundedCornersEnabled': ?bubbleAiRoundedCornersEnabled,
+      'bubbleUserContentPaddingLeft': ?bubbleUserContentPaddingLeft,
+      'bubbleUserContentPaddingRight': ?bubbleUserContentPaddingRight,
+      'bubbleAiContentPaddingLeft': ?bubbleAiContentPaddingLeft,
+      'bubbleAiContentPaddingRight': ?bubbleAiContentPaddingRight,
+      'showThinkingProcess': ?showThinkingProcess,
+      'showModelProvider': ?showModelProvider,
+      'showModelName': ?showModelName,
+      'showRoleName': ?showRoleName,
+      'showUserName': ?showUserName,
+      'showMessageTokenStats': ?showMessageTokenStats,
+      'showMessageTimingStats': ?showMessageTimingStats,
+      'showMessageTimestamp': ?showMessageTimestamp,
+      'avatarShape': ?avatarShape,
+      'avatarCornerRadius': ?avatarCornerRadius,
+      'showInputProcessingStatus': ?showInputProcessingStatus,
+      'useCustomFont': ?useCustomFont,
+      'fontType': ?fontType,
+      'systemFontName': ?systemFontName,
+      'customFontPath': ?customFontPath,
+      'fontScale': ?fontScale,
       if (changesGlobalFont || bubbleUserUseCustomFont != null)
         'bubbleUserUseCustomFont': changesGlobalFont
             ? false
             : bubbleUserUseCustomFont,
-      if (bubbleUserFontType != null) 'bubbleUserFontType': bubbleUserFontType,
-      if (bubbleUserSystemFontName != null)
-        'bubbleUserSystemFontName': bubbleUserSystemFontName,
-      if (bubbleUserCustomFontPath != null)
-        'bubbleUserCustomFontPath': bubbleUserCustomFontPath,
+      'bubbleUserFontType': ?bubbleUserFontType,
+      'bubbleUserSystemFontName': ?bubbleUserSystemFontName,
+      'bubbleUserCustomFontPath': ?bubbleUserCustomFontPath,
       if (changesGlobalFont || bubbleAiUseCustomFont != null)
         'bubbleAiUseCustomFont': changesGlobalFont
             ? false
             : bubbleAiUseCustomFont,
-      if (bubbleAiFontType != null) 'bubbleAiFontType': bubbleAiFontType,
-      if (bubbleAiSystemFontName != null)
-        'bubbleAiSystemFontName': bubbleAiSystemFontName,
-      if (bubbleAiCustomFontPath != null)
-        'bubbleAiCustomFontPath': bubbleAiCustomFontPath,
+      'bubbleAiFontType': ?bubbleAiFontType,
+      'bubbleAiSystemFontName': ?bubbleAiSystemFontName,
+      'bubbleAiCustomFontPath': ?bubbleAiCustomFontPath,
     });
   }
 

@@ -50,7 +50,7 @@ extension CorePaletteToColorScheme on CorePalette {
       outlineVariant: Color(scheme.outlineVariant),
       surface: Color(scheme.surface),
       onSurface: Color(scheme.onSurface),
-      surfaceVariant: Color(scheme.surfaceVariant),
+      surfaceContainerHighest: Color(scheme.surfaceVariant),
       onSurfaceVariant: Color(scheme.onSurfaceVariant),
       inverseSurface: Color(scheme.inverseSurface),
       onInverseSurface: Color(scheme.inverseOnSurface),

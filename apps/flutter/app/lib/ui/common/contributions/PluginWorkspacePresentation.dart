@@ -65,8 +65,9 @@ class PluginWorkspacePresentation {
           if (entry.surface != 'workspace_file' ||
               entry.action != null ||
               params is! Map ||
-              params['extensions'] is! List)
+              params['extensions'] is! List) {
             return false;
+          }
           return (params['extensions'] as List).whereType<String>().any(
             (extension) =>
                 extension.isNotEmpty &&

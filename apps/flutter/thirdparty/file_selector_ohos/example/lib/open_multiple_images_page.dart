@@ -4,7 +4,7 @@
 
 import 'package:file_selector_platform_interface/file_selector_platform_interface.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Screen that allows the user to select multiple image files using
 /// `openFiles`, then displays the selected images in a gallery dialog.

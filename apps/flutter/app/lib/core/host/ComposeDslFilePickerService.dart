@@ -9,7 +9,6 @@ import 'package:mime/mime.dart';
 import 'package:operit_folder_access/operit_folder_access.dart';
 
 import 'ComposeDslFilePickerStorage.dart';
-import 'SelectedFileInput.dart';
 
 /// Opens Compose DSL file-picker requests through Flutter's platform selector.
 class ComposeDslFilePickerService {

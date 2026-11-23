@@ -157,8 +157,9 @@ extension _ComposePresentationNodes on _ComposeProgramExecutorState {
     final ranges = <CodeTextHighlight>[];
     if (emphasis is List) {
       for (final raw in emphasis) {
-        if (raw is! Map)
+        if (raw is! Map) {
           throw const FormatException('CodeText emphasis must be objects');
+        }
         final range = _stringMap(raw);
         final start = _int(range['start']);
         final end = _int(range['end']);

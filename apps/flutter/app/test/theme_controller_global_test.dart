@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -338,8 +337,9 @@ class _SharedThemeBridge extends OperitRuntimeBridge {
         }
         preferences.addAll(patch);
         final watch = _watchRequests['preferencesFlow'];
-        if (watch != null)
+        if (watch != null) {
           _events.add(_event(watch, Map<String, Object?>.of(preferences)));
+        }
         return encodeCoreLink(<Object?>[0, null]);
       default:
         throw UnsupportedError(

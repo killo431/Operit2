@@ -379,7 +379,7 @@ class _TerminalWorkstationCard extends StatelessWidget {
             ListenableBuilder(
               listenable: Listenable.merge(<Listenable>[
                 terminalCountListenable,
-                if (sessionsListenable != null) sessionsListenable!,
+                ?sessionsListenable,
               ]),
               builder: (context, _) {
                 final sessions =

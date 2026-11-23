@@ -34,45 +34,52 @@ class _ComposeOperand {
 
   /// Requires a well-formed operand and a valid local instruction address.
   factory _ComposeOperand.parse(Object? raw, int nodeCount) {
-    if (raw is! List || raw.isEmpty || raw[0] is! int)
+    if (raw is! List || raw.isEmpty || raw[0] is! int) {
       throw const FormatException('Invalid Compose operand');
+    }
     final tag = raw[0] as int;
     switch (tag) {
       case 0:
-        if (raw.length != 2)
+        if (raw.length != 2) {
           throw const FormatException('Invalid Compose constant');
+        }
         return _ComposeOperand(tag, raw[1], const [], const []);
       case 1:
       case 4:
         if (raw.length != 2 ||
             raw[1] is! int ||
             (raw[1] as int) < 0 ||
-            tag == 4 && (raw[1] as int) >= nodeCount)
+            tag == 4 && (raw[1] as int) >= nodeCount) {
           throw const FormatException('Invalid Compose operand address');
+        }
         return _ComposeOperand(tag, raw[1], const [], const []);
       case 2:
         if (raw.length != 3 ||
             raw[1] is! List ||
             raw[2] is! List ||
-            (raw[1] as List).length != (raw[2] as List).length)
+            (raw[1] as List).length != (raw[2] as List).length) {
           throw const FormatException('Invalid Compose object operand');
+        }
         final names = (raw[1] as List).cast<String>();
-        if (names.toSet().length != names.length)
+        if (names.toSet().length != names.length) {
           throw const FormatException('Duplicate Compose operand field');
+        }
         return _ComposeOperand(tag, null, [
           for (final item in raw[2] as List)
             _ComposeOperand.parse(item, nodeCount),
         ], names);
       case 3:
-        if (raw.length != 2 || raw[1] is! List)
+        if (raw.length != 2 || raw[1] is! List) {
           throw const FormatException('Invalid Compose array operand');
+        }
         return _ComposeOperand(tag, null, [
           for (final item in raw[1] as List)
             _ComposeOperand.parse(item, nodeCount),
         ], const []);
       case 5:
-        if (raw.length != 3)
+        if (raw.length != 3) {
           throw const FormatException('Invalid Compose concatenation');
+        }
         return _ComposeOperand(tag, null, [
           _ComposeOperand.parse(raw[1], nodeCount),
           _ComposeOperand.parse(raw[2], nodeCount),
@@ -137,17 +144,19 @@ class _ComposeLayoutProgram {
         for (final node in definition.nodes)
           _ComposeLayoutInstruction(node, definition.nodes.length),
       ] {
-    if (definition.root < 0 || definition.root >= instructions.length)
+    if (definition.root < 0 || definition.root >= instructions.length) {
       throw const FormatException('Compose program root is out of range');
+    }
     final edges = <int, Set<int>>{};
 
     /// Indexes operand requirements once for every instance that shares this program.
     void index(_ComposeOperand operand, Set<int> local) {
-      if (operand.tag == 1)
+      if (operand.tag == 1) {
         requiredParameters = math.max(
           requiredParameters,
           (operand.value as int) + 1,
         );
+      }
       if (operand.tag == 4) local.add(operand.value as int);
       for (final member in operand.members) {
         index(member, local);
@@ -163,10 +172,11 @@ class _ComposeLayoutProgram {
 
     /// Rejects cyclic immutable instruction graphs before any instance is published.
     void visit(int node) {
-      if (active.contains(node))
+      if (active.contains(node)) {
         throw const FormatException(
           'Compose program instructions form a cycle',
         );
+      }
       if (!visited.add(node)) return;
       active.add(node);
       for (final child in edges[node]!) {
@@ -204,8 +214,9 @@ class _ComposeProgramInstance extends ChangeNotifier {
 
   /// Reuses only thin instruction addresses requested by actual widget execution.
   _ComposeProgramNode cursor(int node) {
-    if (node < 0 || node >= program.instructions.length)
+    if (node < 0 || node >= program.instructions.length) {
       throw const FormatException('Unknown Compose instruction');
+    }
     return _cursors.putIfAbsent(node, () => _ComposeProgramNode._(this, node));
   }
 
@@ -327,8 +338,9 @@ class _ComposeProgramStore {
     if (value is Map) {
       if (value.containsKey('__composeRef')) {
         final ref = value['__composeRef'] as List;
-        if (ref.length != 2 || ref[0] is! String || ref[1] is! int)
+        if (ref.length != 2 || ref[0] is! String || ref[1] is! int) {
           throw const FormatException('Invalid Compose reference');
+        }
         return _instance(ref[0] as String).cursor(ref[1] as int);
       }
       return <String, Object?>{
@@ -336,8 +348,9 @@ class _ComposeProgramStore {
           entry.key as String: resolveValue(entry.value),
       };
     }
-    if (value is List)
+    if (value is List) {
       return [for (final member in value) resolveValue(member)];
+    }
     return value;
   }
 
@@ -369,13 +382,15 @@ class _ComposeProgramStore {
 
   /// Commits typed program data from transport or Flutter-owned inline instructions.
   void applyProgram(compose_buffer.ComposeProgramTransaction update) {
-    if (!update.reset && update.revision != _revision + 1)
+    if (!update.reset && update.revision != _revision + 1) {
       throw StateError('Compose transaction revision is out of order');
+    }
     final definitions = <String, _ComposeLayoutProgram>{};
     for (final definition in update.programs) {
       if (definitions.containsKey(definition.id) ||
-          !update.reset && _programs.containsKey(definition.id))
+          !update.reset && _programs.containsKey(definition.id)) {
         throw const FormatException('Compose program was installed twice');
+      }
       definitions[definition.id] = _ComposeLayoutProgram(definition);
     }
 
@@ -388,8 +403,9 @@ class _ComposeProgramStore {
       for (final source in update.instances) source.id: source,
     };
     if (sources.length != update.instances.length ||
-        update.removed.toSet().length != update.removed.length)
+        update.removed.toSet().length != update.removed.length) {
       throw const FormatException('Duplicate Compose instance address');
+    }
     final removed = update.removed.toSet();
     final references = update.reset
         ? <String, Set<String>>{}
@@ -407,8 +423,9 @@ class _ComposeProgramStore {
           if (ref is! List ||
               ref.length != 2 ||
               ref[0] is! String ||
-              ref[1] is! int)
+              ref[1] is! int) {
             throw const FormatException('Invalid Compose reference');
+          }
           final id = ref[0] as String, local = ref[1] as int;
           final target =
               sources[id] ??
@@ -417,8 +434,9 @@ class _ComposeProgramStore {
                   : null);
           if (target == null ||
               local < 0 ||
-              local >= program(target.programId).instructions.length)
+              local >= program(target.programId).instructions.length) {
             throw const FormatException('Unknown Compose dynamic address');
+          }
           outgoing.add(id);
         } else {
           for (final child in value.values) {
@@ -430,14 +448,16 @@ class _ComposeProgramStore {
 
     for (final source in update.instances) {
       final code = program(source.programId);
-      if (source.values.length < code.requiredParameters)
+      if (source.values.length < code.requiredParameters) {
         throw const FormatException('Missing Compose instance parameters');
+      }
       final outgoing = <String>{};
       inspect(source.values, outgoing);
       final patched = <(int, String)>{};
       for (final patch in source.patches) {
-        if (!patched.add((patch.node, patch.field)))
+        if (!patched.add((patch.node, patch.field))) {
           throw const FormatException('Duplicate Compose patch');
+        }
         inspect(patch.value, outgoing);
         if (patch.field == 'type' &&
                 (patch.value is! String ||
@@ -445,22 +465,25 @@ class _ComposeProgramStore {
                       _normalizeToken(patch.value as String),
                     )) ||
             const {'props', 'slots'}.contains(patch.field) &&
-                patch.value is! Map)
+                patch.value is! Map) {
           throw const FormatException('Invalid Compose patch value');
+        }
         if (patch.node < 0 ||
             patch.node >= code.instructions.length ||
-            !const {'type', 'props', 'children', 'slots'}.contains(patch.field))
+            !const {'type', 'props', 'children', 'slots'}.contains(patch.field)) {
           throw const FormatException('Invalid Compose public-node patch');
+        }
       }
       outgoing.remove(source.id);
       references[source.id] = outgoing;
       final previous = _instances[source.id];
       if (!update.reset &&
           previous != null &&
-          previous.program.definition.id != source.programId)
+          previous.program.definition.id != source.programId) {
         throw const FormatException(
           'Compose source program changed without a new identity',
         );
+      }
     }
     final rootSource =
         sources[update.root.instanceId] ??
@@ -469,13 +492,15 @@ class _ComposeProgramStore {
             : null);
     if (rootSource == null ||
         update.root.node < 0 ||
-        update.root.node >= program(rootSource.programId).instructions.length)
+        update.root.node >= program(rootSource.programId).instructions.length) {
       throw const FormatException('Invalid Compose root reference');
+    }
     for (final id in update.removed) {
       if (update.reset ||
           !_instances.containsKey(id) ||
-          sources.containsKey(id))
+          sources.containsKey(id)) {
         throw StateError('Invalid Compose source removal: $id');
+      }
     }
     for (final id in removed) {
       references.remove(id);
@@ -484,15 +509,17 @@ class _ComposeProgramStore {
 
     /// Validates source membership without expanding any immutable layout instructions.
     void visit(String id) {
-      if (active.contains(id))
+      if (active.contains(id)) {
         throw const FormatException('Compose instances form a cycle');
+      }
       if (!visited.add(id)) return;
       active.add(id);
       for (final target in references[id]!) {
-        if (!references.containsKey(target))
+        if (!references.containsKey(target)) {
           throw const FormatException(
             'Compose source retains a removed instance',
           );
+        }
         visit(target);
       }
       active.remove(id);

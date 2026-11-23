@@ -25,7 +25,7 @@ AI 优先的外部插件。TypeScript + 自包含 HTML/WebView；音频由固定
 
 ## 安装与开发
 
-构建需要 LLVM 的 `clang` 和 `wasm-ld`，两者必须位于 PATH 中。DSP 构建脚本统一通过 PATH 调用工具。Windows 安装 LLVM 后，将其 `bin` 目录加入用户 PATH，并重新打开终端。例如本机安装目录为 `C:\Program Files\LLVM\bin`：
+构建需要 LLVM 的 `clang` 和 `wasm-ld`，两者必须位于 PATH 中。DSP 构建脚本统一通过 PATH 调用工具。Windows 的插件同步脚本会自动将已安装的 `%ProgramFiles%\LLVM\bin` 追加到构建进程的 PATH，保留调用方工具的优先级。手动构建时，将 LLVM 的 `bin` 目录加入 PATH。例如本机安装目录为 `C:\Program Files\LLVM\bin`：
 
 ```powershell
 $env:Path = "C:\Program Files\LLVM\bin;$env:Path"

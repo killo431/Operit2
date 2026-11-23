@@ -44,8 +44,9 @@ class PreparedThemeVisual {
           validateThemeFontReference(reference);
           if (reference.startsWith('assets/')) {
             final digest = sealedDigests[reference];
-            if (digest == null)
+            if (digest == null) {
               throw StateError('Font has no validation digest');
+            }
             return fontRegistry.prepare(
               reference,
               resolver: resolver,

@@ -2,7 +2,6 @@
 
 import 'package:flutter/widgets.dart';
 import '../WorkspaceBrowserViewStore.dart';
-import '../tabs/WorkspaceBrowserTabModels.dart';
 import 'WorkspaceBrowserCompositorSurface.dart';
 import 'WorkspaceBrowserNativeSurface.dart';
 

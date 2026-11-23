@@ -41,7 +41,6 @@ class OperitGlassSurface extends StatelessWidget {
       transparentSurface: OperitTheme.of(
         context,
       ).themePreferenceSnapshot.transparentSurfaceEnabled,
-      child: child,
       color: color,
       borderRadius: borderRadius,
       border: border,
@@ -51,6 +50,7 @@ class OperitGlassSurface extends StatelessWidget {
       material: material,
       enableBackdropFilter: enableBackdropFilter,
       clip: clip,
+      child: child,
     );
   }
 }

@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
 /// A deliberately rasterized system-widget frame with one persistent click action.
 class DesktopWidgetSnapshot {

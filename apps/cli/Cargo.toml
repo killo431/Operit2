@@ -16,18 +16,18 @@ path = "src/main.rs"
 operit-host-local-inference = { path = "../../hosts/common/operit-host-local-inference" }
 operit-vfs = { version = "0.1.0", path = "../../core/crates/foundation/vfs" }
 operit-host-data-rescue = { path = "../../hosts/common/operit-host-data-rescue" }
-arboard = "3"
-async-trait = "0.1"
-axum = { version = "0.7", features = ["ws"] }
-base64 = "0.22"
-crossterm = "0.28"
-flate2 = { version = "1", default-features = false, features = ["rust_backend"] }
-fs2 = "0.4"
-futures-util = "0.3"
-gethostname = "1.1"
-hmac = "0.12"
-image = { version = "0.25", default-features = false, features = ["png"] }
-mdns-sd = "0.12"
+arboard = "3.7.0"
+async-trait = "0.1.92"
+axum = { version = "0.8.9", features = ["ws"] }
+base64 = "0.23.1"
+crossterm = "0.29.0"
+flate2 = { version = "1.1.11", default-features = false, features = ["rust_backend"] }
+fs2 = "0.4.3"
+futures-util = "0.3.34"
+gethostname = "1.1.0"
+hmac = "0.13.0"
+image = { version = "0.25.10", default-features = false, features = ["png"] }
+mdns-sd = "0.22.0"
 operit-proxy-edge = { path = "../../edge/sdk/proxy" }
 operit-proxy-local = { path = "../../core/crates/proxy/local" }
 operit-node-runtime = { path = "../../core/crates/node/runtime" }
@@ -42,24 +42,24 @@ operit-runtime = { path = "../../core/crates/runtime/application" }
 operit-store = { path = "../../core/crates/persistence/store" }
 operit-tools = { path = "../../core/crates/tool/services" }
 operit-util = { path = "../../core/crates/foundation/util" }
-qrcode = { version = "0.14", default-features = false }
-ratatui = "0.28"
-unicode-width = "0.1"
-rand_core = { version = "0.6", features = ["getrandom"] }
-serde = { version = "1", features = ["derive"] }
-serde_bytes = "0.11"
-serde_json = "1"
-sha2 = "0.10"
-tar = "0.4"
-tokio = { version = "1", features = ["io-util", "macros", "net", "rt-multi-thread", "sync", "time", "signal"] }
-reqwest = { version = "0.12", default-features = false, features = ["http2", "blocking", "rustls-tls"] }
-uuid = { version = "1", features = ["v4"] }
-x25519-dalek = { version = "2", features = ["static_secrets"] }
-zip = { version = "2", default-features = false, features = ["deflate"] }
+qrcode = { version = "0.15.0", default-features = false }
+ratatui = "0.30.2"
+unicode-width = "0.2.3"
+rand_core = { version = "0.10.1", features = ["getrandom"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_bytes = "0.11.19"
+serde_json = "1.0.154"
+sha2 = "0.11.1"
+tar = "0.4.46"
+tokio = { version = "1.54.1", features = ["io-util", "macros", "net", "rt-multi-thread", "sync", "time", "signal"] }
+reqwest = { version = "0.13.5", default-features = false, features = ["http2", "blocking", "rustls-tls"] }
+uuid = { version = "1.29.3", features = ["v4"] }
+x25519-dalek = { version = "3.0.0", features = ["static_secrets"] }
+zip = { version = "9.8.1", default-features = false, features = ["deflate"] }
 
 [target.'cfg(windows)'.dependencies]
 operit-host-windows-native = { path = "../../hosts/windows", features = ["daemon"] }
-windows-sys = { version = "0.59", features = ["Win32_Foundation", "Win32_System_WindowsProgramming"] }
+windows-sys = { version = "0.61.2", features = ["Win32_Foundation", "Win32_System_WindowsProgramming"] }
 
 [target.'cfg(target_os = "linux")'.dependencies]
 operit-host-linux-native = { path = "../../hosts/linux", features = ["daemon"] }
