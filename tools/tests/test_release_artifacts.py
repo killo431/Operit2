@@ -324,6 +324,16 @@ class ReleaseArtifactTests(unittest.TestCase):
                 patterns = re.findall(r"path: tools/release/dist/(\S+)", text)
                 self.assertTrue(any(fnmatch.fnmatchcase(name, pattern) for pattern in patterns))
 
+    # Ensures Windows native CMake helpers can use their configured Python interpreter.
+    def test_windows_app_workflow_creates_cmake_python_environment(self):
+        workflow = (REPO_ROOT / ".github/workflows/windows-release-build.yml").read_text(encoding="utf-8")
+        cmake = (REPO_ROOT / "apps/flutter/app/windows/runner/CMakeLists.txt").read_text(encoding="utf-8")
+        create_environment = "run: python -m venv .venv"
+        build_app = "run: python tools/build_scripts/build_flutter_windows.py --enforce-lockfile"
+        self.assertIn(create_environment, workflow)
+        self.assertLess(workflow.index(create_environment), workflow.index(build_app))
+        self.assertIn('${OPERIT_REPO_ROOT}/.venv/Scripts/python.exe', cmake)
+
 
 if __name__ == "__main__":
     unittest.main()
